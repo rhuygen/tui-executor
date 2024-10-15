@@ -1,9 +1,10 @@
 # CHANGELOG for the TUI Executor Project
 
-## Version 0.1.x — 15/10/2024
+## Version 0.1.3 — 15/10/2024
 
 - [0.1.3] Added this project to GitHub
 - [0.1.3] Started to clean up the old code that we inherited from the `gui-executor` project.
+- [0.1.3] Cleaned up kernel and client code + unit tests
 
 ## Version 0.1.2 — 14/10/2024
 
