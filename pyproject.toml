@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tui-executor"
+description = "Execute Python code in an automatically generated TUI App."
+version = "0.1.2"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["TUI", "execute", "task"]
+authors = [
+    {name = "Rik Huygen", email = "rik.huygen@kuleuven.be"},
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "textual",
+    "rich >= 13",
+    "executor",
+    "PyYAML",
+    "distro",
+    "ipython >= 8",
+    "ipykernel == 6.15.1",
+    "jupyter-client == 6.1.12",
+#    "jupyter-console == 6.4.2",
+    "jupyter-core == 4.11.1",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-order", "faker", "lorem-text"]
+
+[project.scripts]
+tui-executor = "tui_executor.__main__:main"
+
+[project.urls]
+documentation = "https://rhuygen.github.io/tui-executor/"
+repository = "https://github.com/rhuygen/tui-executor"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tui_executor = ["icons"]

@@ -1,0 +1,7 @@
+/build/
+/dist/
+/.idea/
+tui_executor.egg-info/
+__pycache__
+.DS_Store
+.python-version
