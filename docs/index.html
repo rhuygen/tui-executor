@@ -1,0 +1,2117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.23">
+<title>A Task Executor GUI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<style>
+pre.rouge table td { padding: 5px; }
+pre.rouge table pre { margin: 0; }
+pre.rouge, pre.rouge .w {
+  color: #24292f;
+  background-color: #f6f8fa;
+}
+pre.rouge .k, pre.rouge .kd, pre.rouge .kn, pre.rouge .kp, pre.rouge .kr, pre.rouge .kt, pre.rouge .kv {
+  color: #cf222e;
+}
+pre.rouge .gr {
+  color: #f6f8fa;
+}
+pre.rouge .gd {
+  color: #82071e;
+  background-color: #ffebe9;
+}
+pre.rouge .nb {
+  color: #953800;
+}
+pre.rouge .nc {
+  color: #953800;
+}
+pre.rouge .no {
+  color: #953800;
+}
+pre.rouge .nn {
+  color: #953800;
+}
+pre.rouge .sr {
+  color: #116329;
+}
+pre.rouge .na {
+  color: #116329;
+}
+pre.rouge .nt {
+  color: #116329;
+}
+pre.rouge .gi {
+  color: #116329;
+  background-color: #dafbe1;
+}
+pre.rouge .kc {
+  color: #0550ae;
+}
+pre.rouge .l, pre.rouge .ld, pre.rouge .m, pre.rouge .mb, pre.rouge .mf, pre.rouge .mh, pre.rouge .mi, pre.rouge .il, pre.rouge .mo, pre.rouge .mx {
+  color: #0550ae;
+}
+pre.rouge .sb {
+  color: #0550ae;
+}
+pre.rouge .bp {
+  color: #0550ae;
+}
+pre.rouge .ne {
+  color: #0550ae;
+}
+pre.rouge .nl {
+  color: #0550ae;
+}
+pre.rouge .py {
+  color: #0550ae;
+}
+pre.rouge .nv, pre.rouge .vc, pre.rouge .vg, pre.rouge .vi, pre.rouge .vm {
+  color: #0550ae;
+}
+pre.rouge .o, pre.rouge .ow {
+  color: #0550ae;
+}
+pre.rouge .gh {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .gu {
+  color: #0550ae;
+  font-weight: bold;
+}
+pre.rouge .s, pre.rouge .sa, pre.rouge .sc, pre.rouge .dl, pre.rouge .sd, pre.rouge .s2, pre.rouge .se, pre.rouge .sh, pre.rouge .sx, pre.rouge .s1, pre.rouge .ss {
+  color: #0a3069;
+}
+pre.rouge .nd {
+  color: #8250df;
+}
+pre.rouge .nf, pre.rouge .fm {
+  color: #8250df;
+}
+pre.rouge .err {
+  color: #f6f8fa;
+  background-color: #82071e;
+}
+pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cm, pre.rouge .cp, pre.rouge .cpf, pre.rouge .c1, pre.rouge .cs {
+  color: #6e7781;
+}
+pre.rouge .gl {
+  color: #6e7781;
+}
+pre.rouge .gt {
+  color: #6e7781;
+}
+pre.rouge .ni {
+  color: #24292f;
+}
+pre.rouge .si {
+  color: #24292f;
+}
+pre.rouge .ge {
+  color: #24292f;
+  font-style: italic;
+}
+pre.rouge .gs {
+  color: #24292f;
+  font-weight: bold;
+}
+</style>
+<style>
+/*! Asciidoctor Tabs | Copyright (c) 2018-present Dan Allen | MIT License */
+.tabs {
+  margin-bottom: 1.25em;
+}
+
+.tablist > ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tablist > ul li {
+  align-items: center;
+  background-color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-weight: bold;
+  line-height: 1.5;
+  padding: 0.25em 1em;
+  position: relative;
+}
+
+.tablist > ul li:focus-visible {
+  outline: none;
+}
+
+.tablist.ulist,
+.tablist.ulist > ul li {
+  margin: 0;
+}
+
+.tablist.ulist > ul li + li {
+  margin-left: 0.25em;
+}
+
+.tabs .tablist li::after {
+  content: "";
+  display: block;
+  height: 1px;
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+}
+
+.tabs.is-loading .tablist li:not(:first-child),
+.tabs:not(.is-loading) .tablist li:not(.is-selected) {
+  background-color: #f5f5f5;
+}
+
+.tabs.is-loading .tablist li:first-child::after,
+.tabs:not(.is-loading) .tablist li.is-selected::after {
+  background-color: #fff;
+}
+
+/*
+.tabs:not(.is-loading) .tablist li,
+.tabs:not(.is-loading) .tablist li::after {
+  transition: background-color 200ms ease-in-out;
+}
+*/
+
+.tablist > ul p {
+  line-height: inherit;
+  margin: 0;
+}
+
+.tabpanel {
+  background-color: #fff;
+  padding: 1.25em;
+}
+
+.tablist > ul li,
+.tabpanel {
+  border: 1px solid #dcdcdc;
+}
+
+.tablist > ul li {
+  border-bottom: 0;
+}
+
+.tabs.is-loading .tabpanel + .tabpanel,
+.tabs:not(.is-loading) .tabpanel.is-hidden {
+  display: none;
+}
+
+.tabpanel > :first-child {
+  margin-top: 0;
+}
+
+/* #content is a signature of the Asciidoctor standalone HTML output */
+#content .tabpanel > :last-child,
+#content .tabpanel > :last-child > :last-child,
+#content .tabpanel > :last-child > :last-child > li:last-child > :last-child {
+  margin-bottom: 0;
+}
+
+.tablecontainer {
+  overflow-x: auto;
+}
+
+#content .tablecontainer {
+  margin-bottom: 1.25em;
+}
+
+#content .tablecontainer > table.tableblock {
+  margin-bottom: 0;
+}
+</style>
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>A Task Executor GUI</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_what_is_the_hype">What is the hype?</a></li>
+<li><a href="#_installation">Installation</a></li>
+<li><a href="#tasks-tui">The Tasks TUI</a>
+<ul class="sectlevel2">
+<li><a href="#_organising_your_tasks">Organising your tasks</a></li>
+<li><a href="#_defining_a_task">Defining a Task</a></li>
+<li><a href="#_the_exec_task_decorator">The @exec_task decorator</a></li>
+<li><a href="#_your_functions_parameters">Your function&#8217;s parameters</a></li>
+<li><a href="#_your_functions_result">Your function&#8217;s result</a></li>
+<li><a href="#_your_functions_output">Your function&#8217;s output</a></li>
+<li><a href="#_advanced_type_hints_and_defaults">Advanced Type Hints and Defaults</a></li>
+<li><a href="#_expert_type_hints_and_defaults">Expert Type Hints and defaults</a></li>
+<li><a href="#capture_response">Capture the result</a></li>
+<li><a href="#_choosing_your_icons">Choosing your icons</a></li>
+<li><a href="#_the_jupyter_kernels">The Jupyter Kernels</a></li>
+<li><a href="#running_tasks">Running your tasks</a></li>
+<li><a href="#input_requests">Requesting input</a></li>
+<li><a href="#init">The __init__.py files</a></li>
+<li><a href="#_the_command_log">The command log</a></li>
+<li><a href="#_recurring_functions">Recurring Functions</a></li>
+</ul>
+</li>
+<li><a href="#_best_practices">Best Practices</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph text-right">
+<p>This documentation is for <code>tui-executor</code> ≥ v0.1.0. <span class="image"><a class="image" href="https://github.com/rhuygen/tui-executor"><img src="images/github.png" alt="github" width="40px"></a></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_is_the_hype">What is the hype?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Execute your Python functions <em>not within</em>, but <em>as a TUI</em> without writing any TUI (or Textual) code.</p>
+</div>
+<div class="paragraph">
+<p>By decorating your function, it is recognised as a task and a button will be created in the Task UI.
+The parameters of your function will be presented in a panel of input fields of different kinds.
+The output of your function will be printed in rich text.</p>
+</div>
+<div class="paragraph">
+<p>The TUI Executor was originally developed to support test operators to quickly execute isolated tasks for an experiment in a lab. We had developed a complex machinery with microservices and scripts that would run from a Python REPL, however, after initial implementation and when going into routine testing in the lab, it turned out that running the scripts from the Python REPL was cumbersome, most of the time a test function was copied from a procedure and executed without changing any parameters. It would be much more convenient for a test operator to execute such script or functions through a dedicated user interface (UI) where each button would represent an isolated action to run a specific test. Since we work in a research environment, this sounded as a useful tool in other labs and environments. That&#8217;s how the <code>tui-executor</code> was born.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The Task UI is <strong>not</strong> an IDE and as such it doesn&#8217;t replace –by far– applications like Spyder, PyCharm or VSCode. The Task UI is not a developer tool but an operational tool to help executing simple tasks or functions from a standardised TUI.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation">Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>tui-executor</code> package can be installed via <a href="https://pypi.org">PyPI</a>. You should preferably install the package inside a virtual environment unless you want it to be available from your global Python installation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ pip install [--upgrade] tui-executor</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the <code>--help</code> option to see the commandline options for the <code>tui-executor</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ tui-executor --help
+usage: tui-executor [-h] [--version] [--verbose] [--cmd-log CMD_LOG] [--module-path MODULE_PATH] [--kernel-name KERNEL_NAME] [--app-name APP_NAME] [--debug] [--single]
+
+options:
+  -h, --help            show this help message and exit
+  --version, -V         print the tui-executor version number and exit
+  --verbose, -v         print verbose information, increased verbosity level with multiple occurrences
+  --cmd-log CMD_LOG     location of the command log files
+  --module-path MODULE_PATH
+                        module path of the Python modules and scripts
+  --kernel-name KERNEL_NAME
+                        the kernel that will be started by default, python3 if not given
+  --app-name APP_NAME   the name of the TUI app, will go in the window title
+  --debug, -d           set debugging mode
+  --single              the UI can be started only once (instead of multiple times)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tasks-tui">The Tasks TUI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Tasks TUI is a generic Terminal User Interface that allows the user to execute standard tasks by clicking the task button and provide the necessary arguments. An example of such a Task TUI is given in the screenshot below. This screenshot is taken as an example and showcase from a project I&#8217;m working on. In further sections we will create such a Task TUI step by step.</p>
+</div>
+<div id="csl-task-gui" class="imageblock text-center">
+<div class="content">
+<img src="images/csl_ui.png" alt="csl ui" width="60%">
+</div>
+<div class="title">Figure 1. An example Task GUI used in a real project. This type of GUI is generated from seven short Python modules containing simple functions to perform one specific task.</div>
+</div>
+<div class="paragraph">
+<p>The Task GUI is organised in three panels that are arranged vertically in the window. The top panel is the toolbar to control the Jupyter kernel, the panel at the center contains all the task buttons organised by category, the bottom panel is the console where the output and error messages of the tasks will appear.</p>
+</div>
+<div class="paragraph">
+<p>When you click on a task button, a fourth panel will appear above the console panel. This is the arguments panel where you can specify all arguments required for the task. Default arguments are shown in gray and can be left to use or overwritten to change. The arguments panel of the selected 'Analyse' task for the 'Circle around optical axis' group is shown below.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/csl_ui_args.png" alt="csl ui args" width="60%">
+</div>
+<div class="title">Figure 2. The example Task GUI with arguments panel. The arguments panel is automatically generated by the gui-executor from the arguments and type hints of the Python function.</div>
+</div>
+<div class="paragraph">
+<p>This 'Analyse' task accepts 5 arguments: a list of observation identifiers, the location of the reduced data, an option to save the generated plots in a given output folder, and a flag to make the tasks output more verbose. Since this task will produce plots, we want to execute it as a GUI App. Finally, the 'Close' button hides the arguments panel again and deselects the task button. The 'Run' button executes the task.</p>
+</div>
+<div class="paragraph">
+<p>When you exit the Task GUI a dialog will pop up asking if you really want to quit. I know, this is annoying, but the reason is that our tasks run code in the background in a Jupyter kernel and this kernel has state, i.e. the response or return values of tasks that you have run. You might not want to lose that information by quiting the application and killing the kernel. So, this dialog gives you the opportunity to abort and save your data.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/quit_dialog.png" alt="quit dialog" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>In the rest of this document we will explain how such a GUI as above is created and how you can develop your own version for your specific tasks.</p>
+</div>
+<div class="sect2">
+<h3 id="_organising_your_tasks">Organising your tasks</h3>
+<div class="paragraph">
+<p>To build up the Task GUI, we distinguish each task button as a function, several of these functions can be grouped in a Python module (a <code>.py</code> file) and all the modules plus additional information needed for the Task GUI is kept in a Python package. The <em>CSL Operator GUI</em> shown in the screenshot above, is located in the package <code>camtest.csl</code> and has the following layout:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>camtest.csl
+   ├──────── __init__.py
+   ├──────── camera.py
+   ├──────── circle.py
+   ├──────── hartmann.py
+   ├──────── hexapod.py
+   ├──────── huber.py
+   ├──────── icons
+   ├──────── ogse.py
+   ├──────── refmodel.py
+   └──────── single.py</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each of these <code>.py</code> files form a group of buttons in the above Task GUI. The <code>__init__.py</code> file is special, it defines <code>camtest.csl</code> as a package, and it also defines the command to start the Task GUI [see section <a href="#init">The __init__.py files</a>]. The <code>icons</code> folder contains the graphics for the task buttons and the application icon.</p>
+</div>
+<div class="paragraph">
+<p>Simply starting the CSL Task GUI from the commandline would be done as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ gui-executor --module-path camtest.csl</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_defining_a_task">Defining a Task</h3>
+<div class="paragraph">
+<p>Let&#8217;s build our own simple Task GUI and start with the most stated and useless function, <em>Hello, World!</em>. We will eventually build a Task GUI with tasks of increasing complexity and guide you through the different steps.</p>
+</div>
+<div class="paragraph">
+<p>Create a folder <code>yakka<sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></code> that will be our Task GUI package. In the folder create an empty file <code>__init__.py</code> and a file named <code>hello.py</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>yakka
+   ├──────── __init__.py
+   └──────── hello.py</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>hello.py</code> file shall contain the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="nd">@exec_task</span><span class="p">(</span><span class="n">immediate_run</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  <b class="conum">(1)</b>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, World!</span><span class="sh">"</span><span class="p">)</span></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Each task button in the Task GUI is actually a function that is decorated with the <code>@exec_task</code> decorator.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Make sure you are at the same directory level as the <code>yakka</code> folder and then execute the following command from your terminal. That command will start the Task GUI as shown in the screenshot below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>PYTHONPATH=. gui-executor --module-path yakka</pre>
+</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/yakka-01.png" alt="yakka 01" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>We see the task appearing in the screenshot above. The task text is blue which means it will run immediately when clicked. The tasks name is the name of the function and the task group name is the name of the <code>.py</code> file. The icon is the standard icon used for the task buttons. When you click the task button, the Console shows the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>----- Running script 'hello_world' in kernel <b class="conum">(1)</b>
+The code snippet:
+ ──────────────────────────────────────────
+  response = hello_world()  <b class="conum">(2)</b>
+ ──────────────────────────────────────────
+
+Hello, World! <b class="conum">(3)</b>
+----- function 'hello_world' execution finished. <b class="conum">(4)</b></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What do we see in this output:</p>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The script is run in the kernel, that is the Jupyter kernel which is started when the Task GUI starts up. By default, the 'python3' kernel is used as you can see in the toolbar.</p>
+</li>
+<li>
+<p>The code snippet that is run is shown between two horizontal lines. We see that the function is called without arguments and the return is catched in the variable <code>response</code> (which is <code>None</code> since the function doesn&#8217;t return anything).</p>
+</li>
+<li>
+<p>The string 'Hello, World!' is printed when the function was executed.</p>
+</li>
+<li>
+<p>A mark that the function execution has finished.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s add another task that takes an argument 'name' as a string with the default value of "John".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="o"><strong></span><span class="n">UI_MODULE_DISPLAY_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Hello Tasks</span><span class="sh">"</span><span class="o"></strong></span>  <b class="conum">(1)</b>
+
+<span class="nd">@exec_task</span><span class="p">(</span><span class="n">immediate_run</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">hello_world</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, World!</span><span class="sh">"</span><span class="p">)</span>
+
+<span class="o"><strong></span><span class="nd">@exec_task</span><span class="p">(</span><span class="n">display_name</span><span class="o">=</span><span class="sh">"</span><span class="s">Hello...</span><span class="sh">"</span><span class="p">)</span>  <b class="conum">(2)</b>
+<span class="k">def</span> <span class="nf">hello_you</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">John</span><span class="sh">"</span><span class="p">):</span>  <b class="conum">(3)</b>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Hello, </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">!</span><span class="sh">"</span><span class="p">)</span>
+<span class="o"></strong></span></code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>if the global variable <code>UI_MODULE_DISPLAY_NAME</code> is defined, its value will be used as the name of the group of buttons in this module.</p>
+</li>
+<li>
+<p>You can give the task button a proper name instead of the function name.</p>
+</li>
+<li>
+<p>The type hint for the argument and the default value are used in the arguments panel in the GUI.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="images/yakka-02.png" alt="yakka 02" width="40%"></span>
+<span class="image"><img src="images/yakka-03.png" alt="yakka 03" width="40%"></span></p>
+</div>
+<div class="paragraph">
+<p>In the screenshot above, you can see the effect of the small changes we made in the <code>hello.py</code>. The tasks button group is now called 'Hello Tasks' and the new task we added got the 'Hello&#8230;&#8203;' name instead of the function name. The new task icon has a different color because it is selected. You can also see in the arguments panel that the type hint is picked up and shown in grey and the default name is also filled in grey in the text field. When I put my name there and press the 'Run' button, you can see that the function is called with the proper argument.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_exec_task_decorator">The @exec_task decorator</h3>
+<div class="paragraph">
+<p>A Task is a function that is decorated with the <code>@exec_task</code> decorator. Such a function or task becomes a button in the Task GUI with a default icon. How the task is presented in the Task GUI and how the task is executed depends on the arguments that are passed into the decorator. In this section we will describe these arguments and what their effect is visually and behind the scenes.</p>
+</div>
+<div class="paragraph">
+<p>The default behaviour is as follows: The function is decorated with <code>@exec_task()</code> without any arguments. The task name will be the function name, the task icon will be <span class="image"><img src="images/script-function.svg" alt="script function" width="20px"></span>. When the task is selected, an arguments panel will be shown with a 'Run' button and the Task icon will look like <span class="image"><img src="images/script-function-selected.svg" alt="script function selected" width="20px"></span>. Click on the 'Run' button will execute the task in the selected Jupyter kernel (by default the 'python3' kernel). This is the behaviour that we have seen in the previous sections.</p>
+</div>
+<div class="paragraph">
+<p>If you check back on <a href="#csl-task-gui">Figure 1</a>, you can see that each of the tasks is visualised with a nice icon and a proper task name, most task names are black but there are some blue task names. All these features are the result from optional parameters on the decorator. Let&#8217;s describe these parameters now in the following paragraphs. Remember all decorator parameters are optional.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>immediate_run</code></dt>
+<dd>
+<p>When this parameter is set to True, the task name will be blue and when you click the task, it will run immediately without first showing the arguments panel with a 'Run' button. Don&#8217;t use this option for tasks that take arguments, unless these arguments are of type <code>VariableName</code> (see <a href="#var_name">The variable name</a>). This option is usually used for tasks that only print information or emergency action that must run as soon as possible.</p>
+</dd>
+<dt class="hdlist1"><code>description</code></dt>
+<dd>
+<p>a string with a short description of the function, intended to be used as a tooltip if no docstring is present for the function.</p>
+</dd>
+<dt class="hdlist1"><code>display_name</code></dt>
+<dd>
+<p>a string that will be used as the name of the task (at the right of the button). When this parameter is not given, the function name will be used.</p>
+</dd>
+<dt class="hdlist1"><code>use_kernel, use_gui_app, use_script_app</code></dt>
+<dd>
+<p>These flags can be used to specify how the task shall be executed. The default is to execute a task in the Jupyter kernel. Other options are (1) a GUI app which will run the function in a separate process that is a Qt application and (2) a script which will run the function as a script in a separate Python interpreter. Use these parameters exclusively, i.e. only one must be present.</p>
+</dd>
+<dt class="hdlist1"><code>input_request</code></dt>
+<dd>
+<p>a tuple of strings to recognise input requests from the task. The GUI will scan the task&#8217;s stdin channel for a match with any of these strings and if a match is found, the GUI will fire a dialog requesting a 'yes / no' answer. See <a href="#input_requests">Requesting input</a> for more detailed information.</p>
+</dd>
+<dt class="hdlist1"><code>icons</code></dt>
+<dd>
+<p>This is a tuple of two filepaths that locate the icons that shall be used for the button of this task. The first filepath is the icon for the task button and the second filepath is the icon for the task button when the button is selected. The defaults are <span class="image"><img src="images/script-function.svg" alt="script function" width="20px"></span> and <span class="image"><img src="images/script-function-selected.svg" alt="script function selected" width="20px"></span> respectively.</p>
+</dd>
+<dt class="hdlist1"><code>allow_kernel_interrupt</code></dt>
+<dd>
+<p>a flag that, when True, allows the GUI to interrupt the kernel and stop any running task before executing this task. Use this parameter carefully, it is intended for tasks that have an emergency action and need to run immediately regardless if a previous task is still running or not.</p>
+</dd>
+<dt class="hdlist1"><code>capture_response</code></dt>
+<dd>
+<p>a string or a tuple of strings that represent the variable(s) in which the result of the function shall be captured. See <a href="#capture_response">Capture the result</a> for more detailed information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_your_functions_parameters">Your function&#8217;s parameters</h3>
+<div class="paragraph">
+<p>So what about passing arguments to the task. Since a task is just a function, you write your function parameters like any other Python function. The Task GUI will interpret your function parameters and create a panel with input fields that match the type of your parameter (in case you used type hints).</p>
+</div>
+<div class="paragraph">
+<p>Suppose we have a task to capture an image from a camera and save this image into a file in a folder. Such a function could look like the code below. How that looks in the GUI is shown in the TAB next to the code snippet.</p>
+</div>
+<div id="_tabs_1" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_1_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_1_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_1_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">capture_image</span><span class="p">(</span><span class="n">camera</span><span class="p">,</span> <span class="n">exposure_time</span><span class="p">,</span> <span class="n">aperture</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">location</span><span class="p">):</span>
+    <span class="bp">...</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Captured image not shown for privacy reasons...</span><span class="sh">"</span>
+
+    <span class="k">return</span> <span class="n">image</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_1_gui--panel" class="tabpanel" aria-labelledby="_tabs_1_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/func_param_01.png" alt="func param 01" width="60%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>There are five parameters for the <code>capture_image</code> function and one return value. The GUI shows these parameters in the arguments panel below the task button where you can fill in their values before pressing 'Run'. I have already filled the camera name, the exposure time and aperture, but all arguments are of type <code>str</code> since no type hint was used in the functions parameter list. There is also a message saying the return values will be captured in the variable <code>response</code>. This variable will be overwritten when the function is executed and is accessible from the Jupyter kernel.</p>
+</div>
+<div class="paragraph">
+<p>For any given simple function, this is the default behaviour. You do not have to provide more information to run such a function from the Task GUI. All arguments will be passed into the function as strings. When you didn&#8217;t provide a value, <code>None</code> will be passed as an argument. In the screenshot above I have already pressed the 'Run' button, and you can see in the output panel what the arguments look like and what their type is.</p>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s add type hints to the parameters of our function. We will use the string type for the camera name and the filename and location, and we will use a float for the exposure time and an integer for the aperture. For the location, we want to provide a default value.</p>
+</div>
+<div id="_tabs_2" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_2_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_2_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_2_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_2_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">capture_image</span><span class="p">(</span>
+    <span class="n">camera</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exposure_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aperture</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">~/data/images</span><span class="sh">"</span>
+<span class="p">):</span>
+    <span class="p">...</span>  <span class="c1"># here the actual capturing of the image is done
+</span>    <span class="n">image</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">Captured image from camera </span><span class="sh">'</span><span class="si">{</span><span class="n">camera</span><span class="si">}</span><span class="sh">'</span><span class="s"> with </span><span class="si">{</span><span class="n">exposure_time</span><span class="o">=</span><span class="si">}</span><span class="s"> and </span><span class="si">{</span><span class="n">aperture</span><span class="o">=</span><span class="si">}</span><span class="s">.</span><span class="sh">"</span>
+    <span class="p">...</span>  <span class="c1"># here any further processing of the image can be done
+</span>
+    <span class="k">return</span> <span class="n">image</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_2_gui--panel" class="tabpanel" aria-labelledby="_tabs_2_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/func_param_02.png" alt="func param 02" width="60%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you now have a look at the arguments panel, you will see a lot of small things have changed. Behind the input fields for each parameter there is now the expected type in grey text. The location had a default value which is put as a placeholder in the input text field and there is a small copy icon aligned at the right in that text field. Pressing this icon will copy the default text into the input field and make this text editable. I again already pressed the 'Run' button, and you can see in the output console that the type of the exposure_time argument is 'float', and the type of the aperture argument is 'int'. The return string is also printed with the arguments filled in.</p>
+</div>
+<div class="paragraph">
+<p>One more thing, sometimes you need to be able to input a <code>None</code> instead of an integer, float, or string. You can do this with the <code>typing</code> class <code>Optional</code>, e.g. <code>Optional[int]</code> allows you to use either <code>None</code> or an integer as argument.</p>
+</div>
+<div class="paragraph">
+<p>But we can do better. For the filename and location, it would be nice if we could open a file selector box and navigate in our directory structure to select these values. We have done that in the following code snippet where the <code>filename</code> has type hint '<em>FileName</em>' and <code>location</code> has type hint '<em>Directory</em>'. These are what we call a <em>TypeVar</em> and both are bound to the <em>Path</em> type. The default for <code>location</code> now has changed to a Path value instead of a string.</p>
+</div>
+<div class="paragraph">
+<p>Another change we added was the <code>capture_response</code> parameter of the decorator. The return value of the function is no longer captured in the variable <code>response</code>, but in the variable <code>new_image</code>.</p>
+</div>
+<div id="_tabs_3" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_3_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_3_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_3_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_3_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span><span class="p">,</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">Directory</span>
+
+<span class="nd">@exec_task</span><span class="p">(</span><span class="n">capture_response</span><span class="o">=</span><span class="sh">'</span><span class="s">new_image</span><span class="sh">'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">capture_image_file_type_hints</span><span class="p">(</span>
+        <span class="n">camera</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">exposure_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aperture</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Directory</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="sh">"</span><span class="s">~/data/images</span><span class="sh">"</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="p">...</span>  <span class="c1"># here the actual capturing of the image is done
+</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">Captured image from camera </span><span class="sh">'</span><span class="si">{</span><span class="n">camera</span><span class="si">}</span><span class="sh">'</span><span class="s"> with </span><span class="si">{</span><span class="n">exposure_time</span><span class="o">=</span><span class="si">}</span><span class="s"> and </span><span class="si">{</span><span class="n">aperture</span><span class="o">=</span><span class="si">}</span><span class="s">, </span><span class="sh">"</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">saving it as </span><span class="si">{</span><span class="n">filename</span><span class="o">=</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">location</span><span class="o">=</span><span class="si">}</span><span class="s">.</span><span class="sh">"</span>
+    <span class="p">)</span>
+
+    <span class="p">...</span>  <span class="c1"># here any further processing of the image can be done
+</span>
+    <span class="k">return</span> <span class="n">image</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_3_gui--panel" class="tabpanel" aria-labelledby="_tabs_3_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/func_param_03.png" alt="func param 03" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>If you now select the GUI tab above, the changes in the code result in two new icons (<span class="image"><img src="images/filename.svg" alt="filename" width="20px"></span> and <span class="image"><img src="images/folder.svg" alt="folder" width="20px"></span>) that replace the type behind the filename and location input fields. If you click these icons, a file selector box will open and allow you to select either a filename or a folder from your local disk. If you look at the code snippet printed in the output console, the filename and location arguments to the function are now of type <em>PosixPath</em>.</p>
+</div>
+<div class="paragraph">
+<p>The change with the added decorator parameter <code>capture_response</code> is apparent in the arguments panel where it now says the return values will be captured in 'new_image', but also in the output console you can see that the variable name in which the return value is captured is <code>new_image</code>. So, this function will now, when it is executed, make the return value available in the kernel as the variable named <code>new_image</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s go one step further and change the type of the camera name. We have only a limited number of camera&#8217;s around the house and we don&#8217;t like to type their name all the time, so, we are going to create a dropdown list (or ComboBox) where we can select the camera we want to capture. Luckily, we do not have to worry about coding this dropdown menu, the Task GUI understands the type hint <code>Enum</code> and will automatically create a dropdown box for this parameter. In the following code snippet, we have created a <code>CameraName</code> enumeration class and use it as a type hint for the camera parameter.</p>
+</div>
+<div id="_tabs_4" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_4_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_4_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_4_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_4_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="n">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span><span class="p">,</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">Directory</span>
+
+<span class="k">class</span> <span class="nc">CameraName</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">FRONT_DOOR</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BACK_DOOR</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">GARDEN</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">GARDEN_HOUSE</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">BIRD_HOUSE_1</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">BIRD_HOUSE_2</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="nd">@exec_task</span><span class="p">(</span><span class="n">capture_response</span><span class="o">=</span><span class="sh">'</span><span class="s">new_image</span><span class="sh">'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">capture_image_camera_name</span><span class="p">(</span>
+        <span class="n">camera</span><span class="p">:</span> <span class="n">CameraName</span><span class="p">,</span> <span class="n">exposure_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">aperture</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">filename</span><span class="p">:</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">Directory</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="sh">"</span><span class="s">~/data/images</span><span class="sh">"</span><span class="p">)</span>
+<span class="p">):</span>
+    <span class="p">...</span>  <span class="c1"># here the actual capturing of the image is done
+</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">Captured image from camera </span><span class="sh">'</span><span class="si">{</span><span class="n">camera</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="sh">'</span><span class="s"> with </span><span class="si">{</span><span class="n">exposure_time</span><span class="o">=</span><span class="si">}</span><span class="s"> and </span><span class="si">{</span><span class="n">aperture</span><span class="o">=</span><span class="si">}</span><span class="s">, </span><span class="sh">"</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">saving it as </span><span class="si">{</span><span class="n">filename</span><span class="o">=</span><span class="si">}</span><span class="s"> at </span><span class="si">{</span><span class="n">location</span><span class="o">=</span><span class="si">}</span><span class="s">.</span><span class="sh">"</span>
+    <span class="p">)</span>
+
+    <span class="p">...</span>  <span class="c1"># here any further processing of the image can be done
+</span>
+    <span class="k">return</span> <span class="n">image</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_4_gui--panel" class="tabpanel" aria-labelledby="_tabs_4_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/func_param_04.png" alt="func param 04" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>In the GUI, you can see that the input field for the <code>camera</code> parameter is now a dropdown list. I selected the GARDEN camera already. In the output console, the argument for the function is <code>CameraName.GARDEN</code>, and in the f-string that creates the return value, we have to use <code>camera.name</code> because that <code>camera</code> variable is now an Enum object.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_your_functions_result">Your function&#8217;s result</h3>
+<div class="paragraph">
+<p>Let&#8217;s move from the function&#8217;s parameters to its return value(s). Up to now, we have always returned a string which was then printed in rich text in the output console. But what if we have a more complex return value like a table? It turns out that Rich Renderables like Text, Table, Panel, Syntax, etc. all are printed nicely in the output console when you return them from your task.</p>
+</div>
+<div class="paragraph">
+<p>In the following example, I simulated a task that prints a table from our last bird count day in the backyard. Of course, in a real task this would take additional arguments like the date and other criteria and load the data from a database, but this example should give you a hunch of what is possible. The table is a <a href="https://rich.readthedocs.io/en/latest/tables.html">Rich Table</a> and is returned by the task.</p>
+</div>
+<div id="_tabs_5" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_5_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_5_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_5_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_5_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">bird_count</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">backyard</span><span class="sh">"</span><span class="p">):</span>
+
+    <span class="kn">from</span> <span class="n">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="nc">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="sh">"</span><span class="s">Bird Count for </span><span class="si">{</span><span class="n">camera</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Date</span><span class="sh">"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="sh">"</span><span class="s">right</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">cyan</span><span class="sh">"</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Bird name</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">magenta</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Number</span><span class="sh">"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="sh">"</span><span class="s">center</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">green</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">number</span> <span class="ow">in</span> <span class="p">{</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ChiffChaff</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Robin</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Pigeon</span><span class="sh">"</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Magpie</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Sparrow</span><span class="sh">"</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Great tit</span><span class="sh">"</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="p">}:</span>
+        <span class="n">table</span><span class="p">.</span><span class="nf">add_row</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nf">str</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">table</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_5_gui--panel" class="tabpanel" aria-labelledby="_tabs_5_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/table-bird-count.png" alt="table bird count" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_your_functions_output">Your function&#8217;s output</h3>
+<div class="paragraph">
+<p>If you run your function in the kernel, as a GUI App or as a script, your function can output information by e.g. printing, logging, or even displaying images and plots. Output is handled slightly different depending on how you run your function. We will focus here on running in the kernel. For more details about running the GUI App or a script, see <a href="#running_tasks">Running your tasks</a>.</p>
+</div>
+<div class="paragraph">
+<p>Actually, our table example above with the bird count can also serve as function output. If we print the table with Rich Console, the output is caught and shown in the output console of the Task GUI almost exactly like if you return the table from the function. Any Rich Renderable that you print in your function will be shown as expected in the output console of the Task GUI.</p>
+</div>
+<div id="_tabs_6" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_6_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_6_gui" class="tab">
+<p>GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_6_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_6_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">print_bird_count</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">backyard</span><span class="sh">"</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">today</span><span class="sh">"</span><span class="p">):</span>
+
+    <span class="kn">from</span> <span class="n">rich.table</span> <span class="kn">import</span> <span class="n">Table</span>
+    <span class="kn">from</span> <span class="n">rich.console</span> <span class="kn">import</span> <span class="n">Console</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="nc">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="sh">"</span><span class="s">Bird Count for </span><span class="si">{</span><span class="n">camera</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Date</span><span class="sh">"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="sh">"</span><span class="s">right</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">cyan</span><span class="sh">"</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Bird name</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">magenta</span><span class="sh">"</span><span class="p">)</span>
+    <span class="n">table</span><span class="p">.</span><span class="nf">add_column</span><span class="p">(</span><span class="sh">"</span><span class="s">Number</span><span class="sh">"</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="sh">"</span><span class="s">center</span><span class="sh">"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="sh">"</span><span class="s">green</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">number</span> <span class="ow">in</span> <span class="p">{</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">ChiffChaff</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Robin</span><span class="sh">"</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Pigeon</span><span class="sh">"</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Magpie</span><span class="sh">"</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Sparrow</span><span class="sh">"</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="sh">"</span><span class="s">16 Feb 2023</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Great tit</span><span class="sh">"</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="p">}:</span>
+        <span class="n">table</span><span class="p">.</span><span class="nf">add_row</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nf">str</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+
+    <span class="n">console</span> <span class="o">=</span> <span class="nc">Console</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">console</span><span class="p">.</span><span class="nf">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_6_gui--panel" class="tabpanel" aria-labelledby="_tabs_6_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/print-bird-count.png" alt="print bird count" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Another type that we would want to inspect is the image type. Our camera example above returned a string to illustrate the behaviour we wanted to demonstrate, but we can also use the IPython display function to show images in a separate window.  Let&#8217;s load one of our bird house pictures in the following example. This loads the image from disk and displays the image in a separate window. You will see in the output console that the image —which is still returned by the task— is captured in the <code>response</code> variable and is now printed as <code>&lt;IPython.core.display.Image object&gt;</code>. So, we return the actual image object in the variable <code>response</code>. We can see this image in the Jupyter QtConsole that can be opened from the second button (<span class="image"><img src="images/command.svg" alt="command" width="20px"></span>]) in the Task GUI toolbar. This button will open a new window with a Jupyter Python Console where you have a Python prompt. Type <code>response</code> at the prompt and the image will be shown. You can now further process this image if needed from the Python REPL.</p>
+</div>
+<div id="_tabs_7" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_7_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_7_gui" class="tab">
+<p>GUI</p>
+</li>
+<li id="_tabs_7_console" class="tab">
+<p>Console</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_7_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_7_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">preview_image</span><span class="p">(</span><span class="n">camera</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">bird_house</span><span class="sh">"</span><span class="p">):</span>
+
+    <span class="kn">from</span> <span class="n">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">display</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="nc">Image</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">HERE</span> <span class="o">/</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">camera</span><span class="si">}</span><span class="s">.png</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">image</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_7_gui--panel" class="tabpanel" aria-labelledby="_tabs_7_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/preview-image.png" alt="preview image" width="100%">
+</div>
+</div>
+</div>
+<div id="_tabs_7_console--panel" class="tabpanel" aria-labelledby="_tabs_7_console">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/console-image-bird-house.png" alt="console image bird house" width="100%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+If you want to follow closely on the printed output of your function, you might want to consider using the <code>flush=True</code> argument for the <code>print</code> function.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_advanced_type_hints_and_defaults">Advanced Type Hints and Defaults</h3>
+<div class="paragraph">
+<p>As a small recap, type hints that are recognised by the Task GUI are: <code>str</code>, <code>int</code>, <code>float</code>, <code>bool</code>, <code>list</code>, <code>tuple</code>, and subclasses of <code>Enum</code>. Then, there are a number of types defined by the Task GUI that can be used for paths, i.e. <code>FileName</code> as a type for a filename including extension but without the directory part, <code>FilePath</code> as a type for a full file path which is the relative or absolute path to a file including the filename and extension, and <code>Directory</code> which is the location of a file, i.e. the path to the file without the filename.</p>
+</div>
+<div class="paragraph">
+<p>Then we have a few special cases for more complex arguments to a function. The first one is a <code>FixedList</code> which is a list with a fixed number of elements of specific types. Additionally, there is the <code>ListList</code> which is a dynamic list of fixed lists, and finally, there is the <code>CallBack</code> type which makes your argument dependent on the outcome of a function call at the moment that you select the task and the arguments panel is created. The following sections will describe these <em>type hints</em> in more detail.</p>
+</div>
+<div class="sect3">
+<h4 id="_the_simple_fixed_list">The simple fixed list</h4>
+<div class="paragraph">
+<p>The <code>FixedList</code> is a list of a fixed number of elements of different types. The signature for a FixedList is the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="pythpn">FixedList(literals: List, defaults: List = None, name: str = None)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In practice a <code>FixedList</code> is used when the argument to your function is a list with a limited number of arguments, e.g. a list of positions that you want to visit, or the first name, middle initials and last name of a person. In the example below we use a <code>FixedList</code> to hold the GPS coordinates where I spotted of a bird.</p>
+</div>
+<div id="_tabs_8" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_8_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_8_arguments_panel" class="tab">
+<p>Arguments Panel</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_8_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_8_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight nowrap"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+<span class="kn">from</span> <span class="n">gui_executor.utypes</span> <span class="kn">import</span> <span class="n">FixedList</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">save_observation</span><span class="p">(</span>
+        <span class="n">coordinates</span><span class="p">:</span> <span class="nc">FixedList</span><span class="p">([</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="sh">"</span><span class="s">lat, long</span><span class="sh">"</span><span class="p">),</span>
+        <span class="n">time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">bird_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sh">"""</span><span class="s">
+    Saves the observation into the database.
+
+    Args:
+        coordinates (list): the longitude and latitude coordinates of the observation (decimal degrees)
+        time (str): the time of the observation [YYYY/MM/DD HH:MM:SS]
+        bird_name (str): the name of the bird
+
+    </span><span class="sh">"""</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">A </span><span class="si">{</span><span class="n">bird_name</span><span class="si">}</span><span class="s"> was spotted at [</span><span class="si">{</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">]</span><span class="sh">"</span><span class="p">)</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_8_arguments_panel--panel" class="tabpanel" aria-labelledby="_tabs_8_arguments_panel">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/fixed-list.png" alt="fixed list" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Looking at the <em>Arguments Panel</em> tab, the horizontal space after the <code>coordinates</code> label will be divided amongst the elements in the list. That&#8217;s why this type is only useful for a very limited number of inputs.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_dynamic_list_of_lists">The dynamic list of lists</h4>
+<div class="paragraph">
+<p>TBW</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_call_back_function">The call back function</h4>
+<div class="paragraph">
+<p>TBW</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="var_name">The variable name</h4>
+<div class="paragraph">
+<p>Sometimes you don&#8217;t want to pass fixed numbers or strings into your task through the variables panel, but you want to use a variable that is defined in the Python Console, i.e. in the kernel. That variable can be anything you have defined in the Python Console, or it can be a returned value from a previous task that you have executed (see the section <a href="#capture_response">Capture the result</a> which describes how the names of your return values can be changed).</p>
+</div>
+<div class="paragraph">
+<p>The code below illustrates how this works. The task argument is 'model' which is the variable that is used in your task. The variable name that is taken from the kernel is <code>ldo_model</code>. This latter name shall be defined in the kernel, either manually, or as a return from a previously executed task. If the variable is not defined in the kernel, an error message will be printed.</p>
+</div>
+<div id="_tabs_9" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_9_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_9_variables_panel" class="tab">
+<p>Variables Panel</p>
+</li>
+<li id="_tabs_9_output_panel" class="tab">
+<p>Output Panel</p>
+</li>
+<li id="_tabs_9_error" class="tab">
+<p>Error</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_9_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_9_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="n">UI_MODULE_DISPLAY_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Passing known variables</span><span class="sh">"</span>
+
+<span class="nd">@exec_task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">process_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">LDO -&gt; CSL</span><span class="sh">"</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nc">VariableName</span><span class="p">(</span><span class="sh">"</span><span class="s">ldo_model</span><span class="sh">"</span><span class="p">)</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Processing model: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">model</span> <span class="o">=</span> <span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="c1"># ... your code comess here
+</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="sh">"</span><span class="s">The result of your processing...</span><span class="sh">"</span>
+
+    <span class="k">return</span> <span class="n">result</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_9_variables_panel--panel" class="tabpanel" aria-labelledby="_tabs_9_variables_panel">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/variable_name_panel.png" alt="variable name panel" width="80%">
+</div>
+</div>
+</div>
+<div id="_tabs_9_output_panel--panel" class="tabpanel" aria-labelledby="_tabs_9_output_panel">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/variable_name_output.png" alt="variable name output" width="80%">
+</div>
+</div>
+</div>
+<div id="_tabs_9_error--panel" class="tabpanel" aria-labelledby="_tabs_9_error">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/variable_name_error.png" alt="variable name error" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Since variable name arguments are transparently filled with the variable name that exists in the kernel, you can use the <code>VariableName</code> type arguments when you have an <code>immediate_run=True</code> task, but you can only use variable name arguments, not normal positional or keyword arguments.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expert_type_hints_and_defaults">Expert Type Hints and defaults</h3>
+<div class="paragraph">
+<p>TBW &#8594;  defining a new type hint</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="capture_response">Capture the result</h3>
+<div class="paragraph">
+<p>Since the task that is executed by the GUI is in fact a simple function, it can also return results. These results are normally captured in a variable <code>response</code> which is overwritten by new values each time a task is executed from the GUI, even if the task doesn&#8217;t return anything explicitly in which case <code>response</code> will be None.</p>
+</div>
+<div class="paragraph">
+<p>The developer of the task can decide to capture the result of a task in a different variable or set of variables. This can be specified in the decorator parameter <code>capture_response</code> which can be a string or a tuple of strings. See an example below. The task <code>generate_model</code> returns three values of which we only need the 'model' and the 'hexhw'. In the <code>capture_response</code> you see that the second unused return value is captured in the <code>_</code> and therefore ignored. If you need to ignore more return values, the <code>*_</code> is a valid choice.</p>
+</div>
+<div id="_tabs_10" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_10_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_10_gui" class="tab">
+<p>GUI</p>
+</li>
+<li id="_tabs_10_console" class="tab">
+<p>Console</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_10_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_10_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_task</span>
+
+<span class="n">UI_MODULE_DISPLAY_NAME</span> <span class="o">=</span> <span class="sh">"</span><span class="s">Capturing function responses</span><span class="sh">"</span>
+
+<span class="nd">@exec_task</span><span class="p">(</span><span class="n">capture_response</span><span class="o">=</span><span class="p">(</span><span class="sh">"</span><span class="s">model</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">_</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">hexhw</span><span class="sh">"</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">generate_model</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="sh">"</span><span class="s">LDO -&gt; CSL</span><span class="sh">"</span><span class="p">):</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Generating model: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="sh">"</span><span class="s">This is a model</span><span class="sh">"</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="sh">"</span><span class="s">an unused return value...</span><span class="sh">"</span>
+    <span class="n">hexhw</span> <span class="o">=</span> <span class="sh">"</span><span class="s">this is a reference to a hardware device</span><span class="sh">"</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">hexhw</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_10_gui--panel" class="tabpanel" aria-labelledby="_tabs_10_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/capture-response.png" alt="capture response" width="80%">
+</div>
+</div>
+</div>
+<div id="_tabs_10_console--panel" class="tabpanel" aria-labelledby="_tabs_10_console">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/capture-response-console.png" alt="capture response console" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The GUI tab above shows the arguments panel when selecting the <code>generate_model</code> task. It tells you in which variables the return values will be available, i.e. <code>model, _, hexhw</code>. The Console tab shows a screenshot of the Jupyter Console where we inspected the <code>model</code> and <code>hexhw</code> variables.</p>
+</div>
+<div class="paragraph">
+<p>Notice that the <code>capture_response</code> represents what you would actually write in your Python script when calling the function directly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt;&gt;&gt; model, _, hexhw = generate_model()</pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+Be careful when you use this parameter because it will overwrite the variables that you specify when they already exist in the kernel. The intent of this parameter is to be able to work with the response of a task in a more natural way and have tasks use return variables that are agreed in the project. The danger is that if not used carefully, data can be lost.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_choosing_your_icons">Choosing your icons</h3>
+<div class="paragraph">
+<p>If you do not specify a path for an icon, the Task GUI will use the same icon for all task buttons. This becomes boring very rapidly, but also is error-prone since it will be hard to find your task and the wrong button can be pressed by accident. Looking back at <a href="#csl-task-gui">Figure 1</a> you will see that we have created different icons for the different tasks. It gives our Task GUI not only a nice look-and-feel, but also makes it easier to recognise tasks and find the appropriate button.</p>
+</div>
+<div class="paragraph">
+<p>The icon file type can be <code>PNG</code> or <code>SVG</code>. The latter is preferred because of its scalability. For a task button we need two icons that represent a normal state of the button and the selected state. By default, the normal state icon is <span class="image"><img src="images/script-function.svg" alt="script function" width="20px"></span> and the selected state icon is <span class="image"><img src="images/script-function-selected.svg" alt="script function selected" width="20px"></span>. By convention, the selected state icon is the same as the normal state icon with a different accent of colors. The default icon size is 30×30 pixels.</p>
+</div>
+<div class="paragraph">
+<p>The icons are specified as a parameter <code>icons</code> of the <code>exec_task</code> decorator and is a tuple with two Path elements. The first is the normal icon filepath, the second is the selected icon filepath. As an example, the decorator for the <code>switch_on_camera</code> task from <a href="#csl-task-gui">Figure 1</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="n">ICON_PATH</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span> <span class="o">/</span> <span class="sh">"</span><span class="s">icons/</span><span class="sh">"</span>
+
+<span class="nd">@exec_ui</span><span class="p">(</span><span class="n">display_name</span><span class="o">=</span><span class="sh">"</span><span class="s">Switch ON</span><span class="sh">"</span><span class="p">,</span>
+         <span class="n">icons</span><span class="o">=</span><span class="p">(</span><span class="n">ICON_PATH</span> <span class="o">/</span> <span class="sh">"</span><span class="s">n1-camera-swon.svg</span><span class="sh">"</span><span class="p">,</span> <span class="n">ICON_PATH</span> <span class="o">/</span> <span class="sh">"</span><span class="s">n1-camera-swon-selected.svg</span><span class="sh">"</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When your task is an <em>immediate run</em> task, only the normal state icon will be used.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_jupyter_kernels">The Jupyter Kernels</h3>
+<div class="paragraph">
+<p>TBW</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The Jupyter QtConsole</p>
+</li>
+<li>
+<p>Switching kernels and why</p>
+</li>
+<li>
+<p>Creating a new kernel</p>
+</li>
+<li>
+<p>Specify which kernel to use on the command line</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="running_tasks">Running your tasks</h3>
+<div class="paragraph">
+<p>TBW</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Running in the kernel</p>
+</li>
+<li>
+<p>Running as a script</p>
+</li>
+<li>
+<p>Running as a GUI App</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_running_a_task_in_the_jupyter_console">Running a task in the Jupyter Console</h4>
+<div class="paragraph">
+<p>Of course there is also the Jupyter QtConsole which connects to the same kernel that also runs the tasks when you press their button. You can run a task that you have available as a button also from the Jupyter QtConsole by importing the task and execute it with the proper arguments.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s see how this would work with our <code>print_bird_count()</code> task. This task is located in the module <code>tasks.docs.function_output</code> and it takes two arguments <code>camera</code> and <code>date</code>, but they both have a default value so we can execute the function without arguments.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>In [7]: from tasks.docs.function_output import print_bird_count
+
+In [8]: print_bird_count?
+Signature: print_bird_count(camera: str = 'backyard', date: str = 'today')
+Docstring:
+Prints a table with the number of birds we counted on a specific day.
+
+Args:
+    camera: the camera name for which we want to print the table
+    date: the date for which we want to see the counts
+File:      ~/Documents/PyCharmProjects/gui-executor/tests/tasks/docs/function_output.py
+Type:      function
+
+In [9]: print_bird_count()
+       Bird Count for backyard
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━┓
+┃        Date ┃ Bird name  ┃ Number ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━┩
+│ 16 Feb 2023 │ Magpie     │   3    │
+│ 16 Feb 2023 │ ChiffChaff │   3    │
+│ 16 Feb 2023 │ Great tit  │   9    │
+│ 16 Feb 2023 │ Pigeon     │   5    │
+│ 16 Feb 2023 │ Robin      │   1    │
+│ 16 Feb 2023 │ Sparrow    │   10   │
+└─────────────┴────────────┴────────┘</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="input_requests">Requesting input</h3>
+<div class="paragraph">
+<p>The tasks and functions get their input from the arguments that are provided through the arguments panel. Sometimes however you will need input from the user and in the task this is then requested through the <code>input()</code> function. When you use this function, the message that you pass to the function will be printed on <code>stdout</code> and the REPL will be waiting on <code>stdin</code> for your reply.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="o">&gt;&gt;&gt;</span> <span class="n">rc</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="sh">"</span><span class="s">Do you want to continue [Y/n]? </span><span class="sh">"</span><span class="p">)</span>
+<span class="n">Do</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="k">continue</span> <span class="p">[</span><span class="n">Y</span><span class="o">/</span><span class="n">n</span><span class="p">]</span><span class="err">?</span> <span class="n">n</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">rc</span>
+<span class="sh">'</span><span class="s">n</span><span class="sh">'</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since we are now running your task from within the Task GUI, the task will be blocked and we need a way to provide the input on <code>stdin</code>. The current implementation is a little awkward, but we are working on it to make it more intuitive.</p>
+</div>
+<div class="paragraph">
+<p>Whenever you use an <code>input('prompt')</code> function in your task (or any functions that you call from there), you will need an <code>input_request</code> argument in the <code>@exec_task</code> decorator. The <code>input_request</code> parameter is a tuple of strings where each string is a pattern that can match part of the 'prompt'. A simple example is given below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="nd">@exec_task</span><span class="p">(</span><span class="n">input_request</span><span class="o">=</span><span class="p">(</span><span class="sh">"</span><span class="s">[Y/n]</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">[c/A]</span><span class="sh">"</span><span class="p">),</span> <span class="n">display_name</span><span class="o">=</span><span class="sh">"</span><span class="s">Continue or Abort?</span><span class="sh">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">continue_or_abort_question</span><span class="p">():</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">There should be a dialog appearing with a Continue or Abort question...</span><span class="sh">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="sh">"</span><span class="s">Do you want to continue [Y/n]</span><span class="sh">"</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">response</span> <span class="o">=</span> <span class="si">}</span><span class="sh">"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span> <span class="o">==</span> <span class="sh">'</span><span class="s">n</span><span class="sh">'</span><span class="p">:</span>
+        <span class="k">return</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above code will match <code>"[Y/n]"</code> as part of the 'prompt' and the Task GUI will show the dialog from the next screenshot. That dialog asks you to answer the question from the output console with Yes or No. So, make sure that it is clear from your prompt message when the user needs to answer Yes and when she needs to answer No.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/input_request_dialog.png" alt="input request dialog" width="50%">
+</div>
+</div>
+<div class="paragraph">
+<p>We are looking into a better handling of input requests. The problem is that it&#8217;s not in all circumstance clear when input is requested and what the question is. That&#8217;s why we ask to adapt your prompt message to a clear Yes/No answer.</p>
+</div>
+<div class="paragraph">
+<p>So, why do we need the <code>input_request</code> parameter in the decorator? When you run your task in the kernel, any request on <code>stdin</code> will automatically be recognised by the kernel, communicated to the client and the Yes/No message dialog above will appear. In principle, since the kernel is capable of detecting the input request, we do not need the parameter for the decorator. However, when you run the same task as a GUI App or a script, an input request can not be detected and we need another way to identify an input request. Therefor, it is recommended to always provide the <code>input_request</code> parameter when input is requested from the task.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="init">The __init__.py files</h3>
+<div class="paragraph">
+<p>The <code>__init__.py</code> file is usually empty, but can contain a few definitions which are picked up by the Task GUI. If you have several TABs in your GUI with task buttons, these TABs were created from sub-packages. The <code>__init__.py</code> file for a sub-package can define the <code>UI_TAB_DISPLAY_NAME</code> to specify a name for the TAB instead of the package name. The <code>__init__.py</code> file of the root package, i.e. the one you used with the <code>--module-path</code> commandline option, can define the order in which the TABs appear in the Task GUI. Define a list of sub-package names in the variable <code>UI_TAB_ORDER</code>. The TABS will appear in that order in the GUI.</p>
+</div>
+<div class="paragraph">
+<p>You can define the <code>UI_TAB_HIDE</code> variable in the <code>__init__.py</code> file and assign a <code>Callable</code>, e.g. a function, that returns a bool. When <code>True</code>, the sub-package TAB will be hidden. This can be used to hide/unhide certain tabs for users/developers.</p>
+</div>
+<div class="paragraph">
+<p>Of course, if you have functions that are used by different tasks in seperate modules, you would want to define those functions also in the <code>__init__.py</code> file.</p>
+</div>
+<div class="paragraph">
+<p>The <code>__init__.py</code> file for the project I&#8217;m working on currently (see <a href="#csl-task-gui">Figure 1</a>) looks like the code given below. We define a function to start the Task GUI with all required options. This function is then used as an <em>entry_point</em> in the <code>setup.py</code> file of our project. That way we can start the Task Gui with a simple command <code>csl_ui</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">import</span> <span class="n">os</span>
+<span class="kn">from</span> <span class="n">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span> <span class="n">executor</span> <span class="kn">import</span> <span class="n">ExternalCommand</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="nc">Path</span><span class="p">(</span><span class="n">__file__</span><span class="p">).</span><span class="n">parent</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span>
+
+<span class="n">UI_TAB_ORDER</span> <span class="o">=</span> <span class="p">[</span><span class="sh">'</span><span class="s">tests</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">camera</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">gse</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">configuration</span><span class="sh">'</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">csl_ui</span><span class="p">():</span>
+    <span class="n">logo_path</span> <span class="o">=</span> <span class="n">HERE</span> <span class="o">/</span> <span class="sh">"</span><span class="s">icons/dashboard.svg</span><span class="sh">"</span>
+
+    <span class="c1"># On the client machine, the /data directory is usually mounted read-only.
+</span>    <span class="c1"># If that is the case, write the command log to the users home folder.
+</span>
+    <span class="n">cmd_log</span> <span class="o">=</span> <span class="n">os</span><span class="p">.</span><span class="n">environ</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="sh">"</span><span class="s">UI_LOG_FILE_LOCATION</span><span class="sh">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cmd_log</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="nf">access</span><span class="p">(</span><span class="n">cmd_log</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">W_OK</span><span class="p">):</span>
+        <span class="n">cmd_log</span> <span class="o">=</span> <span class="nf">str</span><span class="p">(</span><span class="nc">Path</span><span class="p">(</span><span class="sh">"</span><span class="s">~</span><span class="sh">"</span><span class="p">).</span><span class="nf">expanduser</span><span class="p">())</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="nc">ExternalCommand</span><span class="p">(</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">gui-executor --verbose --module-path camtest.tasks.csl </span><span class="sh">"</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">--module-path camtest.tasks.shared.camera </span><span class="sh">"</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">--kernel-name plato-test-scripts --single </span><span class="sh">"</span>
+        <span class="sa">f</span><span class="sh">"</span><span class="s">--logo </span><span class="si">{</span><span class="n">logo_path</span><span class="si">}</span><span class="s"> --cmd-log </span><span class="si">{</span><span class="n">cmd_log</span><span class="si">}</span><span class="s"> --app-name </span><span class="sh">'</span><span class="s">CSL Operator GUI</span><span class="sh">'"</span><span class="p">,</span>
+        <span class="n">asynchronous</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+    <span class="n">cmd</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_command_log">The command log</h3>
+<div class="paragraph">
+<p>The commandline option <code>--cmd-log</code> accepts one argument which must be an existing directory where the command log files will be written. The command log is a file that contains the code line that was executed to run the task, preceded with the timestamp when the task started and followed by the duration, i.e. the time it took to finish the task.</p>
+</div>
+<div class="paragraph">
+<p>As an example, I reran the <code>capture_image_camera_name</code> task again and the entry for this task in the log file looks like this.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight nowrap"><code data-lang="text"># &lt;-- 2023-04-13 18:45:27.970997+00:00
+response = capture_image_camera_name(camera=CameraName.FRONT_DOOR, exposure_time=0.3, aperture=11, filename=PosixPath('visitor.png'), location=PosixPath('~/data/images'))
+# --&gt; duration: 0.063239s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When an error occurred and an exception is raised, the Exception message is printed in the command log file. The following log entry shows the function <code>raise_an_exception</code> that raised a division by zero error.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight nowrap"><code data-lang="text"># &lt;-- 2023-04-13 19:03:55.841830+00:00
+response = raise_an_exception(value=0.0)
+# ERROR: float division by zero
+# --&gt; duration: 0.037943s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command log file will be located in the folder that was given with the <code>--cmd-log</code> commandline argument. There will be only a command log file when the argument is present. The filename will be based on the current date, e.g. <code>2023-04-13-cmd-log.txt</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_recurring_functions">Recurring Functions</h3>
+<div class="paragraph">
+<p>Apart from tasks that print status information in the output console, there are sometimes specific items that you want to keep track of without the need to execute a task for this. In the project for which this application was developed, we needed to know about two identifiers at all time, i.e. the identifier for the configuration of our equipment (we call it the Setup) and the identifier of the currently running test (we call it the obsid). So, we developed a function which will repeatedly request these identifiers from the microservice that controls the configuration and display them in the status bar at the bottom of the Task GUI. The code snippet below defines a function <code>show_setup_and_obs_id()</code> which is decorated with <code>@exec_recurring_task</code>. The decorator takes a parameter <code>status_type</code> which can be 'NORMAL' or 'PERMANENT'. When <code>status_type</code> is NORMAL the message will be printed on the left side of the status bar, when <code>status_type</code> is PERMANENT the message will be printed on the right side of the statusbar. The example below is specific for our project, in your case, you will want to put different things in the status bar. The GUI in the TAB shows the output of the function.</p>
+</div>
+<div id="_tabs_11" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_11_code_snippet" class="tab">
+<p>Code snippet</p>
+</li>
+<li id="_tabs_11_csl_operator_gui" class="tab">
+<p>CSL Operator GUI</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_11_code_snippet--panel" class="tabpanel" aria-labelledby="_tabs_11_code_snippet">
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="python"><span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">exec_recurring_task</span>
+<span class="kn">from</span> <span class="n">gui_executor.exec</span> <span class="kn">import</span> <span class="n">StatusType</span>
+
+<span class="kn">from</span> <span class="n">egse.state</span> <span class="kn">import</span> <span class="n">GlobalState</span>
+
+
+<span class="nd">@exec_recurring_task</span><span class="p">(</span><span class="n">status_type</span><span class="o">=</span><span class="n">StatusType</span><span class="p">.</span><span class="n">PERMANENT</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">show_setup_and_obs_id</span><span class="p">():</span>
+    <span class="kn">from</span> <span class="n">egse.confman</span> <span class="kn">import</span> <span class="n">ConfigurationManagerProxy</span>
+    <span class="kn">from</span> <span class="n">egse.obsid</span> <span class="kn">import</span> <span class="n">ObservationIdentifier</span>
+
+    <span class="n">obsid</span><span class="p">:</span> <span class="n">ObservationIdentifier</span>
+    <span class="k">with</span> <span class="nc">ConfigurationManagerProxy</span><span class="p">()</span> <span class="k">as</span> <span class="n">cm_proxy</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">obsid</span> <span class="p">:</span><span class="o">=</span> <span class="n">cm_proxy</span><span class="p">.</span><span class="nf">get_obsid</span><span class="p">().</span><span class="n">return_code</span><span class="p">:</span>
+            <span class="n">test_id</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">"</span><span class="s">OBSID = </span><span class="si">{</span><span class="n">obsid</span><span class="p">.</span><span class="n">test_id</span><span class="si">}</span><span class="s">, </span><span class="sh">"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">test_id</span> <span class="o">=</span> <span class="sh">''</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">test_id</span><span class="si">}</span><span class="s">Setup ID = </span><span class="si">{</span><span class="nf">int</span><span class="p">(</span><span class="n">GlobalState</span><span class="p">.</span><span class="n">setup</span><span class="p">.</span><span class="nf">get_id</span><span class="p">())</span><span class="si">}</span><span class="sh">"</span></code></pre>
+</div>
+</div>
+</div>
+<div id="_tabs_11_csl_operator_gui--panel" class="tabpanel" aria-labelledby="_tabs_11_csl_operator_gui">
+<div class="imageblock text-center">
+<div class="content">
+<img src="images/statusbar-01.png" alt="statusbar 01" width="80%">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The return value of a recurring task shall be of type <code>str</code>. Make sure the string is not too long so it will fit nicely in the status bar.</p>
+</div>
+<div class="paragraph">
+<p>The recurring task can in principle be defined in any module that is located in the <code>module-path</code>, i.e. where also the usual tasks are defined, but it is preferred to have a separate module <code>recurring.py</code> to contain the task definition. It is also possible to define more than one recurring task e.g. one with <code>status_type=NORMAL</code> and another with <code>status_type=PERMANENT</code>. Both functions will be executed in different threads every second.</p>
+</div>
+<div class="paragraph">
+<p>The recurring functions are executed every second in a separate thread so they don&#8217;t block the Task GUI. Take care that your recurring function doesn&#8217;t take longer than a fraction of a second to execute.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_best_practices">Best Practices</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Write simple tasks with just a few lines of code. Put the code that does the actual work in a separate function or class and call that function from the task body. Basically, the task function should just be a wrapper, with some code to massage the arguments and prepare the return value. The bulk of the work should go into a function that can also be called from within another environment, outside the Task GUI. Don&#8217;t build your code around the Task GUI, build a Task GUI around your code.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<hr>
+<div class="footnote" id="_footnotedef_1">
+<a href="#_footnoteref_1">1</a>. 'yakka' means 'work' in informal Australian English
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2024-10-16 07:54:39 +0200
+</div>
+</div>
+<script>
+;(function () { /*! Asciidoctor Tabs | Copyright (c) 2018-present Dan Allen | MIT License */
+  'use strict'
+
+  var config = (document.currentScript || {}).dataset || {}
+  var forEach = Array.prototype.forEach
+
+  init(document.querySelectorAll('.tabs'))
+
+  function init (tabsBlocks) {
+    if (!tabsBlocks.length) return
+    forEach.call(tabsBlocks, function (tabs) {
+      var syncIds = tabs.classList.contains('is-sync') ? {} : undefined
+      var tablist = tabs.querySelector('.tablist ul')
+      tablist.setAttribute('role', 'tablist')
+      var start
+      forEach.call(tablist.querySelectorAll('li'), function (tab, idx) {
+        tab.tabIndex = -1
+        tab.setAttribute('role', tab.classList.add('tab') || 'tab')
+        var id, anchor, syncId
+        if (!(id = tab.id) && (anchor = tab.querySelector('a[id]'))) {
+          id = tab.id = anchor.parentNode.removeChild(anchor).id
+        }
+        var panel = id && tabs.querySelector('.tabpanel[aria-labelledby~="' + id + '"]')
+        if (!panel) return idx ? undefined : toggleSelected(tab, true) // invalid state
+        syncIds && (((syncId = tab.textContent.trim()) in syncIds) ? (syncId = undefined) : true) &&
+          (syncIds[(tab.dataset.syncId = syncId)] = tab)
+        idx || (syncIds && (start = { tab: tab, panel: panel })) ? toggleHidden(panel, true) : toggleSelected(tab, true)
+        tab.setAttribute('aria-controls', panel.id)
+        panel.setAttribute('role', 'tabpanel')
+        var onClick = syncId === undefined ? activateTab : activateTabSync
+        tab.addEventListener('click', onClick.bind({ tabs: tabs, tab: tab, panel: panel }))
+      })
+      if (!tabs.closest('.tabpanel')) {
+        forEach.call(tabs.querySelectorAll('.tabpanel table.tableblock'), function (table) {
+          var container = Object.assign(document.createElement('div'), { className: 'tablecontainer' })
+          table.parentNode.insertBefore(container, table).appendChild(table)
+        })
+      }
+      if (start) {
+        var syncGroupId
+        for (var i = 0, lst = tabs.classList, len = lst.length, className; i !== len; i++) {
+          if (!(className = lst.item(i)).startsWith('data-sync-group-id=')) continue
+          tabs.dataset.syncGroupId = syncGroupId = lst.remove(className) || className.slice(19).replace(/\u00a0/g, ' ')
+          break
+        }
+        if (syncGroupId === undefined) tabs.dataset.syncGroupId = syncGroupId = Object.keys(syncIds).sort().join('|')
+        var preferredSyncId = 'syncStorageKey' in config &&
+          window[(config.syncStorageScope || 'local') + 'Storage'].getItem(config.syncStorageKey + '-' + syncGroupId)
+        var tab = preferredSyncId && syncIds[preferredSyncId]
+        tab && Object.assign(start, { tab: tab, panel: document.getElementById(tab.getAttribute('aria-controls')) })
+        toggleSelected(start.tab, true) || toggleHidden(start.panel, false)
+      }
+    })
+    onHashChange()
+    toggleClassOnEach(tabsBlocks, 'is-loading', 'remove')
+    window.setTimeout(toggleClassOnEach.bind(null, tabsBlocks, 'is-loaded', 'add'), 0)
+    window.addEventListener('hashchange', onHashChange)
+  }
+
+  function activateTab (e) {
+    var tab = this.tab
+    var tabs = this.tabs || (this.tabs = tab.closest('.tabs'))
+    var panel = this.panel || (this.panel = document.getElementById(tab.getAttribute('aria-controls')))
+    querySelectorWithSiblings(tabs, '.tablist .tab', 'tab').forEach(function (el) {
+      toggleSelected(el, el === tab)
+    })
+    querySelectorWithSiblings(tabs, '.tabpanel', 'tabpanel').forEach(function (el) {
+      toggleHidden(el, el !== panel)
+    })
+    if (!this.isSync && 'syncStorageKey' in config && 'syncGroupId' in tabs.dataset) {
+      var storageKey = config.syncStorageKey + '-' + tabs.dataset.syncGroupId
+      window[(config.syncStorageScope || 'local') + 'Storage'].setItem(storageKey, tab.dataset.syncId)
+    }
+    if (!e) return
+    var loc = window.location
+    var hashIdx = loc.hash ? loc.href.indexOf('#') : -1
+    if (~hashIdx) window.history.replaceState(null, '', loc.href.slice(0, hashIdx))
+    e.preventDefault()
+  }
+
+  function activateTabSync (e) {
+    activateTab.call(this, e)
+    var thisTabs = this.tabs
+    var thisTab = this.tab
+    var initialY = thisTabs.getBoundingClientRect().y
+    forEach.call(document.querySelectorAll('.tabs'), function (tabs) {
+      if (tabs === thisTabs || tabs.dataset.syncGroupId !== thisTabs.dataset.syncGroupId) return
+      querySelectorWithSiblings(tabs, '.tablist .tab', 'tab').forEach(function (tab) {
+        if (tab.dataset.syncId === thisTab.dataset.syncId) activateTab.call({ tabs: tabs, tab: tab, isSync: true })
+      })
+    })
+    var shiftedBy = thisTabs.getBoundingClientRect().y - initialY
+    if (shiftedBy && (shiftedBy = Math.round(shiftedBy))) window.scrollBy({ top: shiftedBy, behavior: 'instant' })
+  }
+
+  function querySelectorWithSiblings (scope, selector, siblingClass) {
+    var el = scope.querySelector(selector)
+    if (!el) return []
+    var result = [el]
+    while ((el = el.nextElementSibling) && el.classList.contains(siblingClass)) result.push(el)
+    return result
+  }
+
+  function toggleClassOnEach (elements, className, method) {
+    forEach.call(elements, function (el) {
+      el.classList[method](className)
+    })
+  }
+
+  function toggleHidden (el, state) {
+    el.classList[(el.hidden = state) ? 'add' : 'remove']('is-hidden')
+  }
+
+  function toggleSelected (el, state) {
+    el.setAttribute('aria-selected', '' + state)
+    el.classList[state ? 'add' : 'remove']('is-selected')
+    el.tabIndex = state ? 0 : -1
+  }
+
+  function onHashChange () {
+    var id = window.location.hash.slice(1)
+    if (!id) return
+    var tab = document.getElementById(~id.indexOf('%') ? decodeURIComponent(id) : id)
+    if (!(tab && tab.classList.contains('tab'))) return
+    'syncId' in tab.dataset ? activateTabSync.call({ tab: tab }) : activateTab.call({ tab: tab })
+  }
+})()
+</script>
+</body>
+</html>
