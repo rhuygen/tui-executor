@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tui-executor"
 description = "Execute Python code in an automatically generated TUI App."
-version = "0.1.3"
+version = "0.1.4"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -38,6 +38,7 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-order", "faker", "lorem-text"]
+dev = ["textual-dev"]
 
 [project.scripts]
 tui-executor = "tui_executor.__main__:main"

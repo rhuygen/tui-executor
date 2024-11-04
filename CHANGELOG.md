@@ -1,5 +1,11 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.1.4 — 04/11/2024
+
+- [0.1.4] Updated docs to refer to TUI instead of GUI
+- [0.1.4] Created a first working prototype to demonstrate the TUI layout and widgets 
+- [0.1.4] Rearranged classes and modules
+
 ## Version 0.1.3 — 15/10/2024
 
 - [0.1.3] Added this project to GitHub
