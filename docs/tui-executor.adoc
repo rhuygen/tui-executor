@@ -13,7 +13,7 @@ By decorating your function, it is recognised as a task and a button will be cre
 The parameters of your function will be presented in a panel of input fields of different kinds.
 The output of your function will be printed in rich text.
 
-The TUI Executor was originally developed to support test operators to quickly execute isolated tasks for an experiment in a lab. We had developed a complex machinery with microservices and scripts that would run from a Python REPL, however, after initial implementation and when going into routine testing in the lab, it turned out that running the scripts from the Python REPL was cumbersome, most of the time a test function was copied from a procedure and executed without changing any parameters. It would be much more convenient for a test operator to execute such script or functions through a dedicated GUI where each button would represent an isolated action to run a specific test. Since we work in a research environment, this sounded as a useful tool in other labs and environments. That's how the `tui-executor` was born.
+The TUI Executor was originally developed to support test operators to quickly execute isolated tasks for an experiment in a lab. We had developed a complex machinery with microservices and scripts that would run from a Python REPL, however, after initial implementation and when going into routine testing in the lab, it turned out that running the scripts from the Python REPL was cumbersome, most of the time a test function was copied from a procedure and executed without changing any parameters. It would be much more convenient for a test operator to execute such script or functions through a dedicated user interface (UI) where each button would represent an isolated action to run a specific test. Since we work in a research environment, this sounded as a useful tool in other labs and environments. That's how the `tui-executor` was born.
 
 NOTE: The Task UI is *not* an IDE and as such it doesn't replace –by far– applications like Spyder, PyCharm or VSCode. The Task UI is not a developer tool but an operational tool to help executing simple tasks or functions from a standardised TUI.
 
@@ -30,31 +30,27 @@ Use the `--help` option to see the commandline options for the `tui-executor`:
 [%nowrap]
 ----
 $ tui-executor --help
-usage: gui-executor [-h] [--version] [--verbose] [--cmd-log CMD_LOG] [--module-path MODULE_PATH]
-                    [--kernel-name KERNEL_NAME] [--config CONFIG] [--logo LOGO] [--app-name APP_NAME]
-                    [--debug] [--single]
+usage: tui-executor [-h] [--version] [--verbose] [--cmd-log CMD_LOG] [--module-path MODULE_PATH] [--kernel-name KERNEL_NAME] [--app-name APP_NAME] [--debug] [--single]
 
 options:
   -h, --help            show this help message and exit
-  --version, -V         print the gui-executor version number and exit
+  --version, -V         print the tui-executor version number and exit
   --verbose, -v         print verbose information, increased verbosity level with multiple occurrences
   --cmd-log CMD_LOG     location of the command log files
   --module-path MODULE_PATH
                         module path of the Python modules and scripts
   --kernel-name KERNEL_NAME
                         the kernel that will be started by default, python3 if not given
-  --config CONFIG       a YAML file that configures the executor
-  --logo LOGO           path to logo PNG or SVG file
-  --app-name APP_NAME   the name of the GUI app, will go in the window title
+  --app-name APP_NAME   the name of the TUI app, will go in the window title
   --debug, -d           set debugging mode
   --single              the UI can be started only once (instead of multiple times)
 ----
 
 
-[#tasks-gui]
-== The Tasks GUI
+[#tasks-tui]
+== The Tasks TUI
 
-The Tasks GUI is a generic GUI that allows the user to execute standard tasks by clicking the task button and provide the necessary arguments. An example of such a Task GUI is given in the screenshot below. This screenshot is taken as an example and showcase from a project I'm working on. In further sections we will create such a task GUI step by step.
+The Tasks TUI is a generic Terminal User Interface that allows the user to execute standard tasks by clicking the task button and provide the necessary arguments. An example of such a Task TUI is given in the screenshot below. This screenshot is taken as an example and showcase from a project I'm working on. In further sections we will create such a Task TUI step by step.
 
 .An example Task GUI used in a real project. This type of GUI is generated from seven short Python modules containing simple functions to perform one specific task.
 [[csl-task-gui,Figure 1]]

@@ -49,7 +49,6 @@ from .exec import StatusType
 from .exec import get_arguments
 from .kernel import MyKernel
 from .kernel import start_qtconsole
-from .model import Model
 from .utils import b64decode
 from .utils import capture
 from .utils import combo_box_from_enum

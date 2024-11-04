@@ -1,0 +1,29 @@
+
+TabbedContent {
+    width: 50;
+}
+
+/* Matches the Arguments panel */
+
+#arguments-panel {
+    border: round grey;
+}
+
+/* Matches the RichLog widget where output will appear */
+
+#console-log {
+    border: round grey;
+    height: 2fr;
+}
+
+TaskButton:hover {
+    background: grey;
+}
+
+TaskButton:hover:focus {
+    text-style: bold;
+}
+
+TaskButton:focus {
+    text-style: underline reverse;
+}
