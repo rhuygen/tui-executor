@@ -1,10 +1,11 @@
 # Releasing a new version
 
 * Push your changes to origin
-* Document your changes in ~/docs/tui-executor.adoc
-* Run `asciidoctor -r asciidoctor-tabs -o index.html tui-executor.adoc` in `docs`
+* Document your changes in `./docs/tui-executor.adoc`
+* Run `asciidoctor -r asciidoctor-tabs -o index.html tui-executor.adoc` in `./docs`
 * Push doc changes to origin
-* Bump the version in `__version__.py` 
+* Bump the version in `pyproject.toml`
+* Update the CHANGELOG
 * Push the bumped version
 * Upload to PyPI
   ```

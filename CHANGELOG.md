@@ -1,5 +1,11 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.1.5 — 05/11/2024
+
+- [0.1.5] renamed `args.py` to `funcpars.py`
+- [0.5.1] added a `Singleton` base class and `Empty` is now a Singleton.
+- [0.1.5] fixed a number of unit tests
+
 ## Version 0.1.4 — 04/11/2024
 
 - [0.1.4] Updated docs to refer to TUI instead of GUI
