@@ -2,16 +2,17 @@ from __future__ import annotations
 
 import importlib
 import inspect
-import time
 from pathlib import Path
 
-from tui_executor.exec import Kind
-from tui_executor.exec import ArgumentKind
+from tui_executor.exec import exec_task
 from tui_executor.exec import exec_ui
-from tui_executor.exec import find_ui_button_functions
-from tui_executor.exec import find_ui_functions
-from tui_executor.exec import find_modules
-from tui_executor.exec import get_arguments
+from tui_executor.funcpars import Empty
+from tui_executor.funcpars import ParameterKind
+from tui_executor.funcpars import get_parameters
+from tui_executor.functions import find_ui_button_functions
+from tui_executor.functions import find_ui_functions
+from tui_executor.modules import find_modules
+from tui_executor.tasks import TaskKind
 from tui_executor.utils import sys_path
 
 HERE = Path(__file__).parent.resolve()
@@ -24,7 +25,19 @@ def test_exec_ui():
         return "Pressed"
 
     assert hasattr(press, "__ui_kind__")
-    assert press.__ui_kind__ == Kind.BUTTON
+    assert press.__ui_kind__ == TaskKind.BUTTON
+    assert press.__ui_description__ == "Press and get Pressed."
+    assert press() == "Pressed"
+
+
+def test_exec_task():
+
+    @exec_task(description="Press and get Pressed.")
+    def press():
+        return "Pressed"
+
+    assert hasattr(press, "__ui_kind__")
+    assert press.__ui_kind__ == TaskKind.BUTTON
     assert press.__ui_description__ == "Press and get Pressed."
     assert press() == "Pressed"
 
@@ -47,20 +60,20 @@ def test_find_modules():
     assert "hello, World!" in funcs["ui_echo"]("hello, World!")
 
     with sys_path(HERE):  # make sure Python knows where to look for the module
-        mods = find_modules("contingency")
+        mods = find_modules("tasks.shared.unit_tests")
+
+    print(f"from tasks, {mods = }")
 
     assert "__init__" not in mods
     assert "ui_test_script" in mods
 
     mod = importlib.import_module(mods["ui_test_script"])
-    assert mod.__name__ == "contingency.ui_test_script"
+    assert mod.__name__ == "tasks.shared.unit_tests.ui_test_script"
 
 
 def test_find_sub_modules():
 
     print()
-
-    assert has_sub_modules("tasks") is True
 
     with sys_path(HERE):
         tasks = find_modules("tasks")
@@ -71,7 +84,7 @@ def test_find_sub_modules():
 def test_ui_script():
 
     with sys_path(HERE):  # make sure Python knows where to look for the module
-        funcs = find_ui_button_functions("contingency.ui_test_script")
+        funcs = find_ui_button_functions("tasks.shared.unit_tests.ui_test_script")
 
     assert "concatenate_args" in funcs
     assert "compare_args" in funcs
@@ -93,7 +106,7 @@ def test_ui_function_args():
     # This test is here only to learn about how to interpret the Signatures
 
     with sys_path(HERE):  # make sure Python knows where to look for the module
-        funcs = find_ui_button_functions("contingency.ui_test_script")
+        funcs = find_ui_button_functions("tasks.shared.unit_tests.ui_test_script")
 
     func = funcs["func_with_args"]
     sig = inspect.signature(func)
@@ -124,52 +137,38 @@ def test_ui_function_args():
     print(f"{pars['b'] = }")
 
 
-def test_get_arguments():
+def test_get_parameters():
 
     print()
 
     with sys_path(HERE):  # make sure Python knows where to look for the module
-        funcs = find_ui_button_functions("contingency.ui_test_script")
+        funcs = find_ui_button_functions("tasks.shared.unit_tests.ui_test_script")
 
     func = funcs["func_with_only_kwargs"]
 
-    args = get_arguments(func)
+    args = get_parameters(func)
 
     arg_a = args["a"]
     print(f"{arg_a.annotation = }")
+    print(f"{arg_a.default = }")
     assert arg_a.name == 'a'
-    assert arg_a.kind == ArgumentKind.KEYWORD_ONLY
+    assert arg_a.kind == ParameterKind.KEYWORD_ONLY
     assert arg_a.annotation == str
-    assert arg_a.default is None
+    assert arg_a.default == Empty
 
     arg_b = args["b"]
+    print(f"{arg_b.annotation = }")
+    print(f"{arg_b.default = }")
     assert arg_b.name == 'b'
-    assert arg_b.kind == ArgumentKind.KEYWORD_ONLY
+    assert arg_b.kind == ParameterKind.KEYWORD_ONLY
     assert arg_b.annotation == int
     assert arg_b.default == 42
 
     arg_c = args['c']
 
     assert arg_c.name == 'c'
-    assert arg_c.kind == ArgumentKind.KEYWORD_ONLY
-    assert arg_c.annotation is None
-    assert arg_c.default is None
-
-
-def test_end_observation():
-
-    print()
-
-    with sys_path("/Users/rik/git/plato-test-scripts/src"), \
-         sys_path("/Users/rik/git/plato-test-scripts/venv38/lib/python3.8/site-packages/"), \
-         sys_path("/Users/rik/git/plato-common-egse/src"):
-        funcs = find_ui_button_functions("camtest.contingency.end_observation")
-        funcs.update(find_ui_button_functions("camtest.contingency.start_observation"))
-
-    print(f"{funcs = }")
-
-    start_observation = funcs["start_observation"]
-    start_observation()  # FIXME: what if this function returns something like an error code?
-    time.sleep(10)
-    end_observation = funcs["end_observation"]
-    end_observation()
+    print(f"{arg_c.annotation = }")
+    print(f"{arg_c.default = }")
+    assert arg_c.kind == ParameterKind.KEYWORD_ONLY
+    assert arg_c.annotation is Empty
+    assert arg_c.default is Empty
