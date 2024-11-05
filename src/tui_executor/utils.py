@@ -621,3 +621,23 @@ def timer(*, precision: int = 4):
 
 def decode_traceback(traceback: str) -> str:
     return remove_ansi_escape('\n'.join(traceback))
+
+
+class Singleton:
+    """
+    To create a singleton class, you subclass from Singleton.
+
+    Each subclass will have a single instance, no matter how many times its constructor is called.
+    To further initialize the subclass instance, subclasses should override `init` instead of `__init__`.
+    The `__init__` method is called each time the constructor is called.
+    """
+    def __new__(cls, *args, **kwargs):
+        this = cls.__dict__.get("__this__")
+        if this is not None:
+            return this
+        cls.__this__ = this = object.__new__(cls)
+        this.init(*args, **kwargs)
+        return this
+
+    def init(self, *args, **kwargs):
+        pass
