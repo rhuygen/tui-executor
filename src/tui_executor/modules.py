@@ -1,3 +1,11 @@
+"""
+This module provides functions to find modules and (sub-)packages given a module path or a location.
+
+Note the difference between a module path and a location:
+
+- module_path: a string that defines the dotted module path of a package or module, e.g. 'pkg.subpkg.mod'.
+- location: a string or a Path pointing to a relative or absolute file path, e.g. 'tasks/shared/unit_tests'.
+"""
 __all__ = [
     "find_modules",
     "find_subpackages",
@@ -26,7 +34,7 @@ def find_subpackages(module_path: str) -> Dict[str, Path]:
     module_path's location and shall contain an '__init__.py' file. The search for sub-packages is non-recursive.
 
     Args:
-        module_path: the module path where the Python modules and scripts are located
+        module_path: the module path where the Python modules and scripts are located, e.g. `pkg.subpkg`
 
     Returns:
         A dictionary with the subpackage names as keys and their paths as values.
@@ -43,7 +51,7 @@ def find_modules(module_path: str) -> Dict[str, Any]:
     modules to import. The search for modules is non-recursive.
 
     Args:
-        module_path: the module path where the Python modules and scripts are located
+        module_path: the module path where the Python modules and scripts are located, e.g. `pkg.subpkg`
 
     Returns:
         A dictionary with module names as keys and their paths as values.
@@ -61,6 +69,9 @@ def get_module_location(module_path: str) -> Path:
     """
     Returns the Path where a module is located. If the module is a folder, that folder name will be returned, If the
     module is a '*.py' file, the folder where that module is located will be returned.
+
+    Args:
+        module_path: the full path of a module, e.g. `pkg.subpkg`, `pkg.mod`, `pkg.subpkg.mod`
 
     A Warning will be shown when the module path is pointing to a namespace package.
     """
@@ -86,11 +97,11 @@ def get_module_location(module_path: str) -> Path:
     return location
 
 
-def get_script_module(script_location: str, exec_module: bool = False) -> Dict[str, Any]:
+def get_script_module(script_location: Path | str, exec_module: bool = False) -> Dict[str, Any]:
     """
     Locate the given scripts and return it as a module.
 
-    If the scripts_location argument is a relative pathname, it will be search from the working directory, otherwise
+    If the scripts_location argument is a relative pathname, it will be searched from the working directory, otherwise
     provide an absolute filename.
 
     Args:
@@ -112,7 +123,7 @@ def get_script_module(script_location: str, exec_module: bool = False) -> Dict[s
     return {script_path.stem: script}
 
 
-def get_ui_modules(module_path_list: List) -> Dict[str, Tuple[str, Path]]:
+def get_ui_modules(module_path_list: List[str]) -> Dict[str, Tuple[str, Path]]:
     """
     Find all modules in the given module paths. A module is a Python file (`*.py`), not a directory.
     The search for modules is non-recursive.
@@ -142,7 +153,7 @@ def get_ui_modules(module_path_list: List) -> Dict[str, Tuple[str, Path]]:
     return response
 
 
-def get_ui_subpackages(module_path_list: List) -> Dict[str, Tuple[str, Path]]:
+def get_ui_subpackages(module_path_list: List[str]) -> Dict[str, Tuple[str, Path]]:
     """
     Returns all sub-packages for the given module paths. Although all module paths are processed, the function
     does not search for sub-packages recursively.
