@@ -3,7 +3,7 @@ Script to test the Jupyter kernel.
 
 Run this script as (the trailing x is to prevent pytest from picking up this file):
 
-  $ python src/tests/run_kernel_testx.py
+  $ py tests/run_kernel_testx.py
 
 """
 import contextlib
@@ -12,6 +12,8 @@ import textwrap
 import time
 
 from rich.console import Console
+
+from tui_executor.client import MyClient
 from tui_executor.kernel import MyKernel
 
 console = Console(width=240)
@@ -43,46 +45,47 @@ snippet = textwrap.dedent(
 
 """)
 
-msg_id = kernel.client.execute(snippet, allow_stdin=True)
+with MyClient(kernel=kernel) as client:
+    msg_id = client.execute(snippet, allow_stdin=True)
 
-io_msg = kernel.client.get_iopub_msg(timeout=1.0)
-console.log(io_msg)
+    io_msg = client.get_iopub_msg(timeout=1.0)
+    console.log(io_msg)
 
-io_msg_content = io_msg['content']  # execution_state should be 'busy'
+    io_msg_content = io_msg['content']  # execution_state should be 'busy'
 
-while True:
-    # with contextlib.suppress(queue.Empty):
-    try:
-        io_msg = kernel.client.get_iopub_msg(timeout=1.0)
-        console.log(io_msg)
+    while True:
+        # with contextlib.suppress(queue.Empty):
+        try:
+            io_msg = client.get_iopub_msg(timeout=1.0)
+            console.log(io_msg)
 
-        io_msg_content = io_msg['content']
+            io_msg_content = io_msg['content']
 
-        if io_msg['msg_type'] == 'stream':
-            if 'text' in io_msg_content:
-                text = io_msg_content['text'].rstrip()
-                console.log(f"[red]{text}[/red]")
-        elif io_msg['msg_type'] == 'status':
-            if io_msg_content['execution_state'] == 'idle':
-                console.log("Execution State is Idle, terminating...")
-                break
+            if io_msg['msg_type'] == 'stream':
+                if 'text' in io_msg_content:
+                    text = io_msg_content['text'].rstrip()
+                    console.log(f"[red]{text}[/red]")
+            elif io_msg['msg_type'] == 'status':
+                if io_msg_content['execution_state'] == 'idle':
+                    console.log("Execution State is Idle, terminating...")
+                    break
 
-    except queue.Empty:
-        with contextlib.suppress(queue.Empty):
-            in_msg = kernel.client.get_stdin_msg(timeout=0.1)
-            console.log(in_msg)
+        except queue.Empty:
+            with contextlib.suppress(queue.Empty):
+                in_msg = client.get_stdin_msg(timeout=0.1)
+                console.log(in_msg)
 
-            if in_msg['msg_type'] == 'input_request':
-                in_msg_content = in_msg['content']
+                if in_msg['msg_type'] == 'input_request':
+                    in_msg_content = in_msg['content']
 
-                if "Continue?" in in_msg_content['prompt']:
-                    console.log("[red]We got an input request, sending 'Y'.[/red]")
-                    time.sleep(5.0)
-                    kernel.client.input('y')
+                    if "Continue?" in in_msg_content['prompt']:
+                        console.log("[red]We got an input request, sending 'Y'.[/red]")
+                        time.sleep(5.0)
+                        client.input('y')
 
-msg = kernel.client.get_shell_msg(msg_id)
-console.log("Returned shell message:")
-console.log(msg)
+    msg = client.get_shell_msg(msg_id)
+    console.log("Returned shell message:")
+    console.log(msg)
 
-msg_id = kernel.client.shutdown()
+kernel.shutdown()
 del kernel

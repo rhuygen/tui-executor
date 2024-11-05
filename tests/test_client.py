@@ -1,4 +1,5 @@
 import textwrap
+import time
 
 import pytest
 
@@ -20,6 +21,7 @@ def test_kernel_initialisation(kernel):
 
     snippet = textwrap.dedent("""\
         a = 42
+        print(f"{a = }")
         for _ in range(5):
             a += 2
             print(f"{a = }")
@@ -61,7 +63,7 @@ def test_kernel_after_initialisation(kernel):
         print()
         print(f"*****\n{out}\n*****")
 
-        # assert out == "True"
+        # assert out == "True"  # no output expected as there is no print function called
 
 
 def test_kernel_info(kernel):
@@ -76,7 +78,8 @@ def test_kernel_info(kernel):
         rich.print(info)
 
 
-def test_run_snippet(kernel):
+@pytest.mark.asyncio
+async def test_run_snippet(kernel):
 
     print()
 
@@ -92,9 +95,28 @@ def test_run_snippet(kernel):
 
     with MyClient(kernel) as client:
         msg_id = client.execute(snippet)
+
         msg = client.get_shell_msg(msg_id)
         print(f"1 {'-' * 20} {msg = }")
 
         io_msg = client.get_iopub_msg(timeout=1.0)
         io_msg_content = io_msg['content']
         print(f"2 {'-' * 20} {io_msg_content = }")
+
+        time.sleep(5.0)
+
+        io_msg = client.get_iopub_msg(timeout=1.0)
+        io_msg_content = io_msg['content']
+        print(f"3 {'-' * 20} {io_msg_content = }")
+
+        io_msg = client.get_iopub_msg(timeout=1.0)
+        io_msg_content = io_msg['content']
+        print(f"4 {'-' * 20} {io_msg_content = }")
+
+        io_msg = client.get_iopub_msg(timeout=1.0)
+        io_msg_content = io_msg['content']
+        print(f"5 {'-' * 20} {io_msg_content = }")
+
+        io_msg = client.get_iopub_msg(timeout=1.0)
+        io_msg_content = io_msg['content']
+        print(f"6 {'-' * 20} {io_msg_content = }")
