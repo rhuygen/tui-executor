@@ -12,7 +12,7 @@ from rich.console import Console
 
 from tui_executor.utils import decode_traceback
 
-LOGGER = logging.getLogger("gui-executor.kernel")
+LOGGER = logging.getLogger("tui-executor.kernel")
 DEBUG = False
 
 

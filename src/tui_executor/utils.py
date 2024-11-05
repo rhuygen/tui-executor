@@ -21,6 +21,7 @@ from typing import Dict
 from typing import List
 from typing import Tuple
 
+import textual
 from rich import box
 from rich.panel import Panel
 from rich.syntax import Syntax
@@ -96,7 +97,7 @@ def get_file_path(path: str | Path, name: str) -> Path:
 def copy_func(func, module_display_name=None, function_display_name=None):
     """
     Returns a deep copy of a function object. All function attributes that start with '__ui' are also copied.
-    These attributes are used internally by the 'gui-executor'. Provide display_name if you want to connect
+    These attributes are used internally by the 'tui-executor'. Provide display_name if you want to connect
     the returned function to a module with that display name. The latter is used to organised functions in a TAB.
 
     Note: use the function with caution. Especially, specifying a function_display_name will lose the connection
@@ -144,6 +145,8 @@ def remove_ansi_escape(line):
     """
     ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
     return ansi_escape.sub('', line)
+
+# FIXME: CHECK the following two functions for correct terminology Parameter vs Argument
 
 
 def get_required_args(code: List | str) -> List[Tuple[str, str | None]]:
@@ -281,18 +284,18 @@ def extract_var_name_args_and_kwargs(ui_args: dict):
 
     """
     from tui_executor.utypes import VariableName
-    from tui_executor.exec import ArgumentKind
+    from tui_executor.funcpars import ParameterKind
 
     args = [
         v.annotation.get_value()
         for k, v in ui_args.items()
-        if isinstance(v.annotation, VariableName) and v.kind == ArgumentKind.POSITIONAL_ONLY
+        if isinstance(v.annotation, VariableName) and v.kind == ParameterKind.POSITIONAL_ONLY
     ]
 
     kwargs = {
         k: v.annotation.get_value()
         for k, v in ui_args.items()
-        if isinstance(v.annotation, VariableName) and v.kind in (ArgumentKind.POSITIONAL_OR_KEYWORD, ArgumentKind.KEYWORD_ONLY)
+        if isinstance(v.annotation, VariableName) and v.kind in (ParameterKind.POSITIONAL_OR_KEYWORD, ParameterKind.KEYWORD_ONLY)
     }
 
     return args, kwargs
@@ -492,6 +495,7 @@ def print_system_info():
     rich.print(f"distro: {distro.name()}, {distro.version(pretty=True)}")
     rich.print("sys.executable = ", sys.executable)
     rich.print("sys.path = ", sys.path)
+    rich.print(f"tui-executor is using version {textual.__version__} of Textual")
 
 
 def format_datetime(dt: str | datetime.datetime = None, fmt: str = None, width: int = 6, precision: int = 3):

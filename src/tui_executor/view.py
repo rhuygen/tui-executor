@@ -40,13 +40,13 @@ from . import RUNNABLE_APP
 from . import RUNNABLE_KERNEL
 from . import RUNNABLE_SCRIPT
 from .client import MyClient
-from .exec import Argument
-from .exec import ArgumentKind
-from .exec import Directory
-from .exec import FileName
-from .exec import FilePath
 from .exec import StatusType
-from .exec import get_arguments
+from .funcpars import Directory
+from .funcpars import FileName
+from .funcpars import FilePath
+from .funcpars import Parameter
+from .funcpars import ParameterKind
+from .funcpars import get_parameters
 from .kernel import MyKernel
 from .kernel import start_qtconsole
 from .utils import b64decode
@@ -66,7 +66,7 @@ from .utypes import UQWidget
 
 HERE = Path(__file__).parent.resolve()
 DEBUG = False
-LOGGER = logging.getLogger('gui-executor.view')
+LOGGER = logging.getLogger('tui-executor.view')
 
 
 class RecurringTaskSignals(QObject):
@@ -812,7 +812,7 @@ def is_optional(annotation) -> Tuple[bool, str]:
 
 
 class ArgumentsPanel(QScrollArea):
-    def __init__(self, button: DynamicButton, ui_args: Dict[str, Argument]):
+    def __init__(self, button: DynamicButton, ui_args: Dict[str, Parameter]):
         super().__init__()
 
         self.setWidgetResizable(True)
@@ -890,9 +890,9 @@ class ArgumentsPanel(QScrollArea):
                     reg_ex_validator = QRegExpValidator(reg_exp, input_field)
                     input_field.setValidator(reg_ex_validator)
 
-            if arg.kind == ArgumentKind.POSITIONAL_ONLY:
+            if arg.kind == ParameterKind.POSITIONAL_ONLY:
                 self._args_fields[name] = input_field
-            elif arg.kind in [ArgumentKind.POSITIONAL_OR_KEYWORD, ArgumentKind.KEYWORD_ONLY]:
+            elif arg.kind in [ParameterKind.POSITIONAL_OR_KEYWORD, ParameterKind.KEYWORD_ONLY]:
                 self._kwargs_fields[name] = input_field
             else:
                 print("ERROR: Only POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD, and KEYWORD_ONLY arguments are supported!")
@@ -1305,7 +1305,7 @@ class View(QMainWindow):
 
         open_url_action = QAction(self)
         open_url_action.setText("Developer Manual...")
-        open_url_action.triggered.connect(partial(self.open_url, "https://ivs-kuleuven.github.io/gui-executor/"))
+        open_url_action.triggered.connect(partial(self.open_url, "https://rhuygen.github.io/tui-executor/"))
 
         file_menu.addAction(reload_action)
         help_menu.addAction(open_url_action)
@@ -1604,7 +1604,7 @@ class View(QMainWindow):
             if button.function.__ui_allow_kernel_interrupt__:
                 self.interrupt_kernel()
 
-            ui_args = get_arguments(button.function)
+            ui_args = get_parameters(button.function)
             args, kwargs = extract_var_name_args_and_kwargs(ui_args)
             self.run_function(button.function, args, kwargs, button.function.__ui_runnable__)
 
@@ -1626,7 +1626,7 @@ class View(QMainWindow):
         #   * This should be done from the control or model and probably in the background?
         #   * Add ArgumentsPanel in a tabbed widget? When should it be removed from the tabbed widget? ...
 
-        ui_args = get_arguments(button.function)
+        ui_args = get_parameters(button.function)
 
         args_panel = ArgumentsPanel(button, ui_args)
         args_panel.run_button.clicked.connect(

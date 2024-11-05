@@ -1,5 +1,7 @@
 from __future__ import annotations
-
+"""
+This module provides the decorators for defining Tasks.
+"""
 __all__ = [
     "StatusType",
     "exec_recurring_task",
@@ -29,6 +31,10 @@ def exec_recurring_task(
         kind: TaskKind = TaskKind.RECURRING,
         status_type: StatusType = None,
 ):
+    """
+    Decorator for a recurring task. The function will be executed as a background task (a thread or a co-routine)
+    at periodic intervals.
+    """
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -59,8 +65,8 @@ def exec_task(
         capture_response: str | tuple[str, ...] = "response",
 ):
     """
-    Decorates the function as an Exec UI function. We have different kinds of UI functions. By default,
-    the function is decorated as a UI Button which will appear in the UI as a button to execute the function.
+    Decorates the function as an executable task in the TUI Executor. The function will appear in the TUI
+    as a button to execute the function.
 
     Args:
         kind: identifies the function and what it can be used for [default = BUTTON]

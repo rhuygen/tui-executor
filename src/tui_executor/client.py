@@ -7,8 +7,10 @@ from jupyter_client import KernelClient
 from tui_executor.kernel import MyKernel
 from tui_executor.utils import decode_traceback
 
-LOGGER = logging.getLogger("gui-executor.client")
+LOGGER = logging.getLogger("tui-executor.client")
+
 DEBUG = True
+"""Enable/disable all debugging log messages in this module."""
 
 
 class MyClient:

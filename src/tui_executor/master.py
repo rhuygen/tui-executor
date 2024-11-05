@@ -1,7 +1,6 @@
 import random
 import textwrap
 
-from textual import events
 from textual.app import ComposeResult
 from textual.containers import Grid
 from textual.containers import Horizontal

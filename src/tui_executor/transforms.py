@@ -16,6 +16,7 @@ last_input_ts = datetime.datetime.now(tz=datetime.timezone.utc)
 #   * DONE - write a timestamp to the file on input and a duration on result
 #   * DONE - Allow the user to set the command log file location -> --cmd-log
 
+
 def process_info(info):
     lines = info.raw_cell.splitlines(keepends=True)
     if not lines:
