@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Final
 
+import textual
 from textual.app import ComposeResult
 from textual.binding import Binding
 from textual.containers import Center
@@ -12,6 +13,7 @@ from textual.containers import Vertical
 from textual.containers import VerticalScroll
 from textual.screen import ModalScreen
 from textual.widgets import Button
+from textual.widgets import Label
 from textual.widgets import Markdown
 
 from .version import get_version
@@ -46,8 +48,12 @@ class HelpScreen(ModalScreen[None]):
     }
 
     HelpScreen > Vertical > Center {
-        padding: 1;
+        padding-top: 1;
         height: auto;
+    }
+    
+    #lbl-textual-version {
+        margin-left: 2;
     }
     """
 
@@ -61,6 +67,7 @@ class HelpScreen(ModalScreen[None]):
                 yield Markdown(HELP + help_text)
             with Center():
                 yield Button("Close", variant="primary")
+            yield Label(f"This app uses Textual v{textual.__version__}.", id="lbl-textual-version")
 
     def on_mount(self) -> None:
         # It seems that some things inside Markdown can still grab focus;
