@@ -168,6 +168,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     # kernel_name = "python3"
-    kernel_name = "plato-common-egse"
+    # kernel_name = "plato-common-egse"
+    kernel_name = "plato-test-scripts"
 
     do_test_my_kernel(name=kernel_name)
