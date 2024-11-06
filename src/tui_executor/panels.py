@@ -70,8 +70,14 @@ class ModulePanel(Static):
 
     def compose(self) -> ComposeResult:
 
+        # Our functions are all decorated functions, decorated with the @exec_ui or @exec_task.
+        # Since we have used functools.wraps(), all our functions have the attribute __wrapped__
+        # which points to the original function. What we need is the first line of the function
+        # in the module file, because we want the functions to be sorted in the order they appear
+        # in the source code file and not alphabetically.
+
         with Collapsible(title=self.name):
-            for func_name, func in self.functions.items():
+            for func_name, func in sorted(self.functions.items(), key=lambda x: x[1].__ui_lineno__):
                 yield TaskButton(func_name, func)
 
     def is_empty(self):

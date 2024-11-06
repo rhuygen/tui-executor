@@ -6,6 +6,8 @@ Note the difference between a module path and a location:
 - module_path: a string that defines the dotted module path of a package or module, e.g. 'pkg.subpkg.mod'.
 - location: a string or a Path pointing to a relative or absolute file path, e.g. 'tasks/shared/unit_tests'.
 """
+from __future__ import annotations
+
 __all__ = [
     "find_modules",
     "find_subpackages",
