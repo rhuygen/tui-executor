@@ -56,7 +56,7 @@ def main():
         parser.print_help()
         return
 
-    app = TuiExecutorApp()
+    app = TuiExecutorApp(module_path_list=args.module_path)
 
     if not single:
         return app.run()

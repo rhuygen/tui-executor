@@ -1,8 +1,13 @@
+"""
+This module provides functionality to find specific functions, i.e. functions that are decorated
+with the `@exec_task` or `@exec_recurring_task` decorators. The former, also called 'ui_button_functions'
+are tasks that are associated with a button in the UI, while the latter are functions that are periodically
+executed in the background.
+"""
 __all__ = [
+    "find_ui_functions",
     "get_ui_button_functions",
     "get_ui_recurring_functions",
-    "find_ui_button_functions",
-    "find_ui_recurring_functions",
 ]
 
 import importlib
@@ -13,18 +18,10 @@ from typing import Dict
 from .tasks import TaskKind
 
 
-def get_ui_button_functions(self, mod: str) -> Dict[str, Callable]:
-    return find_ui_button_functions(mod)
-
-
-def get_ui_recurring_functions(self, mod: str) -> Dict[str, Callable]:
-    return find_ui_recurring_functions(mod)
-
-
-def find_ui_button_functions(module_path: str) -> Dict[str, Callable]:
+def get_ui_button_functions(module_path: str) -> Dict[str, Callable]:
     """
     Returns a dictionary with function names as keys and the callable function as their value.
-    The functions are intended to be used as UI button callable, i.e. a GUI can automatically
+    The functions are intended to be used as UI button callable, i.e. a UI can automatically
     identify these functions and assign them to a `clicked` action of a button.
 
     Args:
@@ -36,7 +33,7 @@ def find_ui_button_functions(module_path: str) -> Dict[str, Callable]:
     )
 
 
-def find_ui_recurring_functions(module_path: str) -> Dict[str, Callable]:
+def get_ui_recurring_functions(module_path: str) -> Dict[str, Callable]:
     """
     Returns a dictionary with function names as keys and the callable function as their value.
     The functions are intended to be used as recurring callables, i.e. the GUI will call these

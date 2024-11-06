@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from tui_executor.exec import exec_task, FileName, FilePath, Directory
+from tui_executor.exec import exec_task
 
 UI_MODULE_DISPLAY_NAME = "02 – Capture Responses"
 

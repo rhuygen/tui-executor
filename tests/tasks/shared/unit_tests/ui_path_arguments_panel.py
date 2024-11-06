@@ -1,6 +1,9 @@
 from pathlib import Path
 
-from tui_executor.exec import exec_ui, FileName, FilePath, Directory
+from tui_executor.exec import exec_ui
+from tui_executor.funcpars import Directory
+from tui_executor.funcpars import FileName
+from tui_executor.funcpars import FilePath
 
 UI_MODULE_DISPLAY_NAME = "Path-like Arguments"
 

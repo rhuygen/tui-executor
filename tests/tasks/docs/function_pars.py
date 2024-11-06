@@ -1,7 +1,9 @@
 from enum import IntEnum
 from pathlib import Path
 
-from tui_executor.exec import exec_task, FileName, Directory
+from tui_executor.exec import exec_task
+from tui_executor.funcpars import Directory
+from tui_executor.funcpars import FileName
 from tui_executor.utypes import FixedList
 
 
@@ -42,6 +44,7 @@ def capture_image_file_type_hints(
 
     return image
 
+
 class CameraName(IntEnum):
     FRONT_DOOR = 1
     BACK_DOOR = 2
@@ -49,6 +52,7 @@ class CameraName(IntEnum):
     GARDEN_HOUSE = 4
     BIRD_HOUSE_1 = 5
     BIRD_HOUSE_2 = 6
+
 
 @exec_task(capture_response='new_image')
 def capture_image_camera_name(

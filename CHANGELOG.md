@@ -1,5 +1,18 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.1.6 — 06/11/2024 — The Navigation Release
+
+This release fixes the TABs, the collapsible module sections and task buttons in the navigation panel at the left part of the TUI. The buttons and sections have the correct names and labels. The actions associated with button presses are not yet implemented.
+
+- [0.1.6] Master Screen refactored to handle packages, modules and functions/tasks. The TABs, collapsible modules and function buttons are now properly rendered.
+- [0.1.6] more consistent use of module_path and module_path_list
+- [0.1.6] its now much clearer when dotted module path or directory path is returned
+- [0.1.6] added ArgumentsPanel, ModulePanel, and PackagePanel
+- [0.1.6] support for commandline argument `--module-path`
+- [0.1.6] added many docstrings for modules and functions
+- [0.1.6] further fixes to unit tests (WIP)
+- [0.1.6] added Textual version info to the help screen
+
 ## Version 0.1.5 — 05/11/2024
 
 - [0.1.5] renamed `args.py` to `funcpars.py`

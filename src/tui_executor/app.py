@@ -1,3 +1,5 @@
+from typing import List
+
 from textual.app import App
 from textual.binding import Binding
 
@@ -15,8 +17,13 @@ class TuiExecutorApp(App):
         Binding("d", "toggle_dark", "Toggle dark mode"),
     ]
 
+    def __init__(self, module_path_list: List[str]):
+        super().__init__()
+
+        self.module_path_list = module_path_list
+
     def on_mount(self):
-        self.push_screen("master")
+        self.push_screen(MasterScreen(self.module_path_list))
 
     def action_help(self) -> None:
         if self.screen != self.get_screen("help"):

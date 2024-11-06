@@ -5,6 +5,10 @@ from tui_executor.exec import exec_task
 _LOGGER = logging.getLogger(__name__)
 
 
+def normal_function(value: int = 23):
+    return value * 2
+
+
 @exec_task()
 def renderable_output(value: float = 42) -> str:
     # This task is to test a problem with rendering a string that containes text between square brackets.

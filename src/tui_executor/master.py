@@ -1,5 +1,6 @@
 import random
 import textwrap
+from typing import List
 
 from textual.app import ComposeResult
 from textual.containers import Grid
@@ -14,23 +15,43 @@ from textual.widgets import RichLog
 from textual.widgets import TabPane
 from textual.widgets import TabbedContent
 
+from .modules import get_ui_subpackages
+from .panels import ModulePanel
+from .panels import PackagePanel
 from .tasks import TaskButton
 
 
 class MasterScreen(Screen):
+    def __init__(self, module_path_list: List[str]):
+        super().__init__()
+
+        self.module_path_list = module_path_list
+
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
+
+        self.log.info(f"MasterScreen: {self.module_path_list = }")
+
         yield Header()
         yield Footer()
+
         with Horizontal():
             with TabbedContent():
-                for package in ("Tests", "GSE", "Camera"):
-                    with TabPane(title=package):
-                        with VerticalScroll():
-                            for module in ("Simple", "Hartmann", "Circle"):
-                                with Collapsible(title=module):
-                                    for task in range(random.randint(1, 5)):
-                                        yield TaskButton(f"Task {task}")
+                for module_path in self.module_path_list:
+                    subpackages = get_ui_subpackages(module_path=module_path)
+
+                    self.log.info(f"MasterScreen: {module_path = }, {subpackages = }")
+
+                    if not subpackages:
+                        yield PackagePanel(title=module_path, module_path=module_path)
+                        continue
+
+                    for package_name, subpackage in subpackages.items():
+                        tab_name, location = subpackage
+                        self.log.info(f"MasterScreen: {package_name = }, {tab_name = }, {location = }")
+
+                        yield PackagePanel(title=tab_name, module_path=f"{module_path}.{package_name}")
+
             with Vertical():
                 yield Grid(name="Arguments", id="arguments-panel")
                 yield RichLog(max_lines=200, markup=True, id="console-log")

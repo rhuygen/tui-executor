@@ -1,8 +1,9 @@
 from pathlib import Path
 
-from tui_executor.exec import exec_task, FileName, Directory
+from tui_executor.exec import exec_task
 
 HERE = Path(__file__).parent.resolve()
+
 
 @exec_task()
 def print_bird_count(camera: str = "backyard", date: str = "today"):

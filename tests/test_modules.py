@@ -75,18 +75,25 @@ def test_get_ui_modules():
 
     rich.print()
 
-    module_path_list = [
-        "tasks.shared",
-        "tasks.specific",
-    ]
+    rich.print(f"{sys.path = }")
 
-    ui_mods = get_ui_modules(module_path_list)
-    rich.print(ui_mods)
+    module_path = "tasks.shared.unit_tests"
+    ui_mods = get_ui_modules(module_path)
+    rich.print(f"{module_path = }, {ui_mods = }")
+    assert "immediate_run" in ui_mods
+    assert ui_mods["immediate_run"] == ('immediate_run', 'tasks.shared.unit_tests.immediate_run')
+    assert "recurring_tasks" in ui_mods
+    assert ui_mods["recurring_tasks"] == ('01 - Recurring Tasks', 'tasks.shared.unit_tests.recurring_tasks')
+
+    module_path = "tasks.specific"
+    ui_mods = get_ui_modules(module_path)
+    rich.print(f"{module_path = }, {ui_mods = }")
     assert "recurring" in ui_mods
     assert ui_mods["recurring"] == ('recurring', 'tasks.specific.recurring')
 
-    ui_mods = get_ui_modules(["tasks.specific.input_fields"])
-    rich.print(ui_mods)
+    module_path = "tasks.specific.input_fields"
+    ui_mods = get_ui_modules(module_path)
+    rich.print(f"{module_path = }, {ui_mods = }")
     assert "simple" in ui_mods
     assert ui_mods["simple"] == ('simple', 'tasks.specific.input_fields.simple')
     assert "var_name" in ui_mods
@@ -97,17 +104,17 @@ def test_get_ui_subpackages():
 
     rich.print()
 
-    module_path_list = [
-        "tasks.shared",
-        "tasks.specific",
-    ]
-
-    ui_subpkgs = get_ui_subpackages(module_path_list)
+    module_path = "tasks.shared"
+    ui_subpkgs = get_ui_subpackages(module_path)
     rich.print(ui_subpkgs)
     assert "unit_tests" in ui_subpkgs
     assert ui_subpkgs["unit_tests"][0] == 'Unit Tests'
     assert str(ui_subpkgs["unit_tests"][1]).endswith("shared/unit_tests")
     assert ui_subpkgs["unit_tests"][1].is_dir()
+
+    module_path = "tasks.specific"
+    ui_subpkgs = get_ui_subpackages(module_path)
+    rich.print(ui_subpkgs)
 
 
 def test_get_script_module():

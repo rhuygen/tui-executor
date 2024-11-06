@@ -44,17 +44,17 @@ def find_subpackages(module_path: str) -> Dict[str, Path]:
     return {item.name: item for item in location.iterdir() if item.is_dir() and (item / "__init__.py").exists()}
 
 
-def find_modules(module_path: str) -> Dict[str, Any]:
+def find_modules(module_path: str) -> Dict[str, str]:
     """
     Finds Python modules and scripts in the given module path (non recursively). The modules will not be
-    imported, instead their module path will be returned. The idea is that the caller can decide which
+    imported, instead their dotted module path will be returned. The idea is that the caller can decide which
     modules to import. The search for modules is non-recursive.
 
     Args:
         module_path: the module path where the Python modules and scripts are located, e.g. `pkg.subpkg`
 
     Returns:
-        A dictionary with module names as keys and their paths as values.
+        A dictionary with module name as keys and their dotted module path as values.
     """
     location = get_module_location(module_path)
 
@@ -123,60 +123,65 @@ def get_script_module(script_location: Path | str, exec_module: bool = False) ->
     return {script_path.stem: script}
 
 
-def get_ui_modules(module_path_list: List[str]) -> Dict[str, Tuple[str, Path]]:
+def get_ui_modules(module_path: str) -> Dict[str, Tuple[str, str]]:
     """
-    Find all modules in the given module paths. A module is a Python file (`*.py`), not a directory.
-    The search for modules is non-recursive.
+    Find all modules in the given module path. A module is a Python file (`*.py`),
+    not a directory. The search for modules is non-recursive.
 
-    All modules will be imported. That will reveal any import error and is also needed to get the value of the display
-    name of the module, in `UI_MODULE_DISPLAY_NAME`.
+    All modules will be imported. That will reveal any import error and is also
+    needed to get the value of the display name of the module, in `UI_MODULE_DISPLAY_NAME`.
 
     Args:
-        module_path_list: a list of module paths
+        module_path: a full dotted module path, e.g. 'tasks.shared'.
 
     Returns:
-        A dictionary with module name as key and where the value is a tuple (display name, module path).
+        A dictionary with module name as key and where the value is
+        a tuple (display name, dotted module path).
 
     Logs:
-        When an exception is raised during import, the exception is logged as a warning.
+        When an exception is raised during import, the exception is logged as
+        a warning.
     """
-    module_path_list: List = module_path_list
     response = {}
-    for module_path in module_path_list:
-        for name, path in find_modules(module_path).items():
-            try:
-                mod = importlib.import_module(path)
-                display_name = getattr(mod, "UI_MODULE_DISPLAY_NAME", name)
-                response[name] = (display_name, path)
-            except Exception as exc:
-                log.warning(f"{exc.__class__.__name__}: {exc} ({path})")
+
+    for name, dotted_path in find_modules(module_path).items():
+        try:
+            mod = importlib.import_module(dotted_path)
+            display_name = getattr(mod, "UI_MODULE_DISPLAY_NAME", name)
+            response[name] = (display_name, dotted_path)
+        except Exception as exc:
+            log.warning(f"{exc.__class__.__name__}: {exc} ({dotted_path})")
+
     return response
 
 
-def get_ui_subpackages(module_path_list: List[str]) -> Dict[str, Tuple[str, Path]]:
+def get_ui_subpackages(module_path: str) -> Dict[str, Tuple[str, Path]]:
     """
-    Returns all sub-packages for the given module paths. Although all module paths are processed, the function
-    does not search for sub-packages recursively.
+    Returns all sub-packages for the given module path. The function does not
+    search for sub-packages recursively. Sub-packages that have the variable
+    'UI_TAB_HIDE' defined will be omitted when the function associated with
+    that variable returns True.
 
     Args:
-        module_path_list: a list of module paths
+        module_path: the full dotted module path, e.g. 'tasks.shared'.
 
     Returns:
-        A dictionary with the module name as key and where the value is a tuple (tab name, package path).
+        A dictionary with the module name as key and where the value is a tuple
+        (tab name, package directory path).
     """
-    module_path_list: List = module_path_list
     response = {}
-    for module_path in module_path_list:
-        for name, path in find_subpackages(module_path).items():
-            mod = importlib.import_module(f"{module_path}.{name}")
 
-            # If the module contains a variable UI_TAB_HIDE that is a Callable (function),
-            # execute the function to determine if the module shall be included or not.
+    for name, path in find_subpackages(module_path).items():
+        mod = importlib.import_module(f"{module_path}.{name}")
 
-            hide_tab = getattr(mod, 'UI_TAB_HIDE', None)
-            if isinstance(hide_tab, Callable) and hide_tab():
-                continue
+        # If the module contains a variable UI_TAB_HIDE that is a Callable (function),
+        # execute the function to determine if the module shall be included or not.
 
-            display_name = getattr(mod, "UI_TAB_DISPLAY_NAME", name)
-            response[name] = (display_name, path)
+        hide_tab = getattr(mod, 'UI_TAB_HIDE', None)
+        if isinstance(hide_tab, Callable) and hide_tab():
+            continue
+
+        display_name = getattr(mod, "UI_TAB_DISPLAY_NAME", name)
+        response[name] = (display_name, path)
+
     return response
