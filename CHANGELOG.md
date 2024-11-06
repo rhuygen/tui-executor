@@ -2,9 +2,12 @@
 
 ## Version 0.1.7 — 06/11/2024 — The Sorting Release
 
-This release fixes the sorting of the TAbs, collapsible module sections and the function buttons. The TABs are sorted first according to the `UI_TAB_ORDER`, second in alphabetical order.
+This release fixes the sorting of the TABs, collapsible module sections and the function buttons. Empty TABs and panels are omitted.
 
+- [0.1.7] the collapsible module panels are now also sorted alphabetically
+- [0.1.7] collapsible module panels that are empty, i.e. do not contain task buttons, are omitted
 - [0.1.7] TABS are sorted alphabetically (capitals first)
+- [0.1.7] TABS that are empty, i.e. do not contain any modules, are omitted
 
 ## Version 0.1.6 — 06/11/2024 — The Navigation Release
 

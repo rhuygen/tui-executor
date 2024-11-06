@@ -31,10 +31,10 @@ class MasterScreen(Screen):
         yield Header()
         yield Footer()
 
-        self._create_tabs()
-
         with Horizontal():
             with TabbedContent():
+
+                self.tabs = self._create_tabs()
                 for tab_name in sorted(self.tabs):
                     yield self.tabs[tab_name]
 
@@ -53,6 +53,14 @@ class MasterScreen(Screen):
         self.query_one("#arguments-panel", Grid).border_title = "Arguments"
 
     def _create_tabs(self):
+        """
+        Creates all TABs for the sub-packages in the module_path_list. The reason to do this before adding them to
+        the TabContent is that the TABs now can be sorted before adding.
+
+        Returns:
+            A dictionary containing all PackagePanel TabPanes with the display name as their key.
+        """
+        tabs = {}
 
         for module_path in self.module_path_list:
             subpackages = get_ui_subpackages(module_path=module_path)
@@ -61,14 +69,20 @@ class MasterScreen(Screen):
 
             if not subpackages:
                 tab_name = get_tab_name(module_path)
-                self.tabs[tab_name] = PackagePanel(title=tab_name, module_path=module_path)
+                tab = PackagePanel(title=tab_name, module_path=module_path)
+                if not tab.is_empty():
+                    tabs[tab_name] = tab
                 continue
 
             for package_name, subpackage in subpackages.items():
                 tab_name, location = subpackage
                 self.log.info(f"MasterScreen: {package_name = }, {tab_name = }, {location = }")
 
-                self.tabs[tab_name] = PackagePanel(title=tab_name, module_path=f"{module_path}.{package_name}")
+                tab = PackagePanel(title=tab_name, module_path=f"{module_path}.{package_name}")
+                if not tab.is_empty():
+                    tabs[tab_name] = tab
+
+        return tabs
 
 
 def get_tab_name(module_path: str, name: str = None):

@@ -74,6 +74,9 @@ class ModulePanel(Static):
             for func_name, func in self.functions.items():
                 yield TaskButton(func_name, func)
 
+    def is_empty(self):
+        return len(self.functions) == 0
+
 
 class PackagePanel(TabPane):
     """
@@ -96,13 +99,37 @@ class PackagePanel(TabPane):
 
         self.module_path = module_path
         self.modules = get_ui_modules(module_path=module_path)
+        self.panels = {}
 
         self.log.info(f"PackagePanel: {self.module_path = }, {self.modules = }")
 
     def compose(self) -> ComposeResult:
 
         with VerticalScroll():
-            for module_name, module in self.modules.items():
-                display_name, dotted_path = module
-                self.log.info(f"PackagePanel: {module_name = }, {display_name = }, {dotted_path = }")
-                yield ModulePanel(name=display_name, module_path=dotted_path)
+
+            self.panels = self._create_module_panels()
+            for panel_name in sorted(self.panels):
+                yield self.panels[panel_name]
+
+    def is_empty(self):
+        return len(self.modules) == 0
+
+    def _create_module_panels(self):
+        """
+        Creates all collapsible panels for the modules in this package. The reason to do this before adding them to
+        the TabPane is that the panels now can be sorted before adding.
+
+        Returns:
+            A dictionary containing all Collapsible ModulePanel with the display name as their key.
+        """
+
+        panels = {}
+
+        for module_name, module in self.modules.items():
+            display_name, dotted_path = module
+            self.log.info(f"PackagePanel: {module_name = }, {display_name = }, {dotted_path = }")
+            panel = ModulePanel(name=display_name, module_path=dotted_path)
+            if not panel.is_empty():
+                panels[display_name] = panel
+
+        return panels
