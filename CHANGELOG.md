@@ -4,6 +4,7 @@
 
 This release fixes the sorting of the TABs, collapsible module sections and the function buttons. Empty TABs and panels are omitted.
 
+- [0.1.10] function buttons are now sorted in the order they appear in the source module instead of alphabetically
 - [0.1.9] allow Python >= 3.8
 - [0.1.8] fix a problem in the build where the 'app.tcss' and 'help.md' were missing
 - [0.1.7] the collapsible module panels are now also sorted alphabetically
