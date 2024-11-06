@@ -1,5 +1,11 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.1.7 — 06/11/2024 — The Sorting Release
+
+This release fixes the sorting of the TAbs, collapsible module sections and the function buttons. The TABs are sorted first according to the `UI_TAB_ORDER`, second in alphabetical order.
+
+- [0.1.7] TABS are sorted alphabetically (capitals first)
+
 ## Version 0.1.6 — 06/11/2024 — The Navigation Release
 
 This release fixes the TABs, the collapsible module sections and task buttons in the navigation panel at the left part of the TUI. The buttons and sections have the correct names and labels. The actions associated with button presses are not yet implemented.

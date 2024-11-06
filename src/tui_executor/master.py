@@ -1,4 +1,4 @@
-import random
+import importlib
 import textwrap
 from typing import List
 
@@ -6,19 +6,14 @@ from textual.app import ComposeResult
 from textual.containers import Grid
 from textual.containers import Horizontal
 from textual.containers import Vertical
-from textual.containers import VerticalScroll
 from textual.screen import Screen
-from textual.widgets import Collapsible
 from textual.widgets import Footer
 from textual.widgets import Header
 from textual.widgets import RichLog
-from textual.widgets import TabPane
 from textual.widgets import TabbedContent
 
 from .modules import get_ui_subpackages
-from .panels import ModulePanel
 from .panels import PackagePanel
-from .tasks import TaskButton
 
 
 class MasterScreen(Screen):
@@ -26,6 +21,7 @@ class MasterScreen(Screen):
         super().__init__()
 
         self.module_path_list = module_path_list
+        self.tabs = {}
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
@@ -35,22 +31,12 @@ class MasterScreen(Screen):
         yield Header()
         yield Footer()
 
+        self._create_tabs()
+
         with Horizontal():
             with TabbedContent():
-                for module_path in self.module_path_list:
-                    subpackages = get_ui_subpackages(module_path=module_path)
-
-                    self.log.info(f"MasterScreen: {module_path = }, {subpackages = }")
-
-                    if not subpackages:
-                        yield PackagePanel(title=module_path, module_path=module_path)
-                        continue
-
-                    for package_name, subpackage in subpackages.items():
-                        tab_name, location = subpackage
-                        self.log.info(f"MasterScreen: {package_name = }, {tab_name = }, {location = }")
-
-                        yield PackagePanel(title=tab_name, module_path=f"{module_path}.{package_name}")
+                for tab_name in sorted(self.tabs):
+                    yield self.tabs[tab_name]
 
             with Vertical():
                 yield Grid(name="Arguments", id="arguments-panel")
@@ -65,3 +51,30 @@ class MasterScreen(Screen):
             """
         ))
         self.query_one("#arguments-panel", Grid).border_title = "Arguments"
+
+    def _create_tabs(self):
+
+        for module_path in self.module_path_list:
+            subpackages = get_ui_subpackages(module_path=module_path)
+
+            self.log.info(f"MasterScreen: {module_path = }, {subpackages = }")
+
+            if not subpackages:
+                tab_name = get_tab_name(module_path)
+                self.tabs[tab_name] = PackagePanel(title=tab_name, module_path=module_path)
+                continue
+
+            for package_name, subpackage in subpackages.items():
+                tab_name, location = subpackage
+                self.log.info(f"MasterScreen: {package_name = }, {tab_name = }, {location = }")
+
+                self.tabs[tab_name] = PackagePanel(title=tab_name, module_path=f"{module_path}.{package_name}")
+
+
+def get_tab_name(module_path: str, name: str = None):
+    mod = importlib.import_module(module_path)
+    name = name or module_path.split('.')[-1]
+
+    display_name = getattr(mod, "UI_TAB_DISPLAY_NAME", name)
+
+    return display_name
