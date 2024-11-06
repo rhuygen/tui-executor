@@ -1,6 +1,6 @@
 # CHANGELOG for the TUI Executor Project
 
-## Version 0.1.9 — 06/11/2024 — The Sorting Release
+## Version 0.1.10 — 06/11/2024 — The Sorting Release
 
 This release fixes the sorting of the TABs, collapsible module sections and the function buttons. Empty TABs and panels are omitted.
 
