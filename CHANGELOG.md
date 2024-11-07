@@ -1,5 +1,19 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.1.12 — 07/11/2024 — The Information is Knowledge Release
+
+This release implements tooltips for the collapsible module sections and for the task buttons. If a docstring exists at module level or at function level, it will be shown in a tooltip when the user hovers over the widget.
+
+I also change the build system from setuptools to hatchling.
+
+- [0.1.12] Changed build system to hatchling
+- [0.1.12] small updates to `README.md`
+- [0.1.12] added a demo and demo tasks to the project
+- [0.1.11] added a `tooltips.py` module to demonstrate the tooltips in the demo
+- [0.1.11] Tooltips implemented for task buttons
+- [0.1.11] Tooltips implemented for collapsible module sections
+- [0.1.11] small updates of the `help.md` 
+
 ## Version 0.1.10 — 06/11/2024 — The Sorting Release
 
 This release fixes the sorting of the TABs, collapsible module sections and the function buttons. Empty TABs and panels are omitted.

@@ -27,3 +27,10 @@ TaskButton:hover:focus {
 TaskButton:focus {
     text-style: underline reverse;
 }
+
+Tooltip {
+    padding: 1 2;
+    background: $primary;
+    color: auto 90%;
+    max-width: 80;
+}

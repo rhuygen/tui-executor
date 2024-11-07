@@ -1,8 +1,7 @@
+import importlib
 from typing import Dict
 
 from textual.app import ComposeResult
-from textual.containers import Container
-from textual.containers import Vertical
 from textual.containers import VerticalScroll
 from textual.widget import Widget
 from textual.widgets import Collapsible
@@ -14,7 +13,6 @@ from tui_executor.funcpars import Parameter
 from tui_executor.funcpars import get_parameters
 from tui_executor.functions import get_ui_button_functions
 from tui_executor.modules import get_ui_modules
-from tui_executor.modules import get_ui_subpackages
 from tui_executor.tasks import TaskButton
 
 
@@ -76,7 +74,9 @@ class ModulePanel(Static):
         # in the module file, because we want the functions to be sorted in the order they appear
         # in the source code file and not alphabetically.
 
-        with Collapsible(title=self.name):
+        with Collapsible(title=self.name) as section:
+            mod = importlib.import_module(self.module_path)
+            section.tooltip = mod.__doc__
             for func_name, func in sorted(self.functions.items(), key=lambda x: x[1].__ui_lineno__):
                 yield TaskButton(func_name, func)
 

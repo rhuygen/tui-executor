@@ -75,6 +75,12 @@ def get_module_location(module_path: str) -> Path:
     Args:
         module_path: the full path of a module, e.g. `pkg.subpkg`, `pkg.mod`, `pkg.subpkg.mod`
 
+    Returns:
+        The absolute path to the location of the module.
+
+    Raises:
+        A ValueError when the location is not a directory.
+
     A Warning will be shown when the module path is pointing to a namespace package.
     """
     mod = importlib.import_module(module_path)
@@ -96,7 +102,7 @@ def get_module_location(module_path: str) -> Path:
     if not location.is_dir():
         raise ValueError(f"Expected a folder, instead got {str(location)}")
 
-    return location
+    return location.resolve()
 
 
 def get_script_module(script_location: Path | str, exec_module: bool = False) -> Dict[str, Any]:

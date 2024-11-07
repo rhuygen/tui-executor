@@ -3,6 +3,7 @@ __all__ = [
     "TaskKind",
 ]
 
+import textwrap
 from enum import IntEnum
 from typing import Callable
 
@@ -51,3 +52,6 @@ class TaskButton(Button):
 
         self.label = get_task_button_label(function)  # noqa
         self.function = function
+
+        if function.__doc__:
+            self.tooltip = textwrap.dedent(function.__doc__)

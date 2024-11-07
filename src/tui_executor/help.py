@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import platform
 from pathlib import Path
 from typing import Final
 
@@ -67,7 +68,7 @@ class HelpScreen(ModalScreen[None]):
                 yield Markdown(HELP + help_text)
             with Center():
                 yield Button("Close", variant="primary")
-            yield Label(f"This app uses Textual v{textual.__version__}.", id="lbl-textual-version")
+            yield Label(f"This app uses Textual v{textual.__version__} (Python {platform.python_version()}).", id="lbl-textual-version")
 
     def on_mount(self) -> None:
         # It seems that some things inside Markdown can still grab focus;

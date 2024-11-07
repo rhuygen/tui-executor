@@ -3,5 +3,15 @@
 /.idea/
 tui_executor.egg-info/
 __pycache__
+
+# macOS specific
 .DS_Store
+
+# used by pyenv and virtual environments
 .python-version
+
+# use by textual-web
+ganglion.toml
+
+# other build tools
+pyproject-setuptools.toml

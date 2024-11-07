@@ -81,7 +81,8 @@ def save_observation(
     Saves the observation into the database.
 
     Args:
-        coordinates (list): the longitude and latitude coordinates of the observation (decimal degrees)
+        coordinates (list): the longitude and latitude coordinates of the
+                            observation (decimal degrees)
         time (str): the time of the observation [YYYY/MM/DD HH:MM:SS]
         bird_name (str): the name of the bird
 
