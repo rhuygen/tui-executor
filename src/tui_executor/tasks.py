@@ -41,12 +41,6 @@ class TaskButton(Button):
     A button that represents a task. Pressing the button will open its arguments panel.
     """
 
-    DEFAULT_CSS = """
-    TaskButton {
-        min-width: 80%;
-    }
-    """
-
     def __init__(self, name: str, function: Callable):
         super().__init__(name=name)
 
@@ -55,3 +49,10 @@ class TaskButton(Button):
 
         if function.__doc__:
             self.tooltip = textwrap.dedent(function.__doc__)
+
+    def on_mount(self):
+        if self.immediate_run():
+            self.add_class("immediate_run")
+
+    def immediate_run(self):
+        return self.function.__ui_immediate_run__

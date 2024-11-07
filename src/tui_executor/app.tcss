@@ -16,16 +16,33 @@ TabbedContent {
     height: 2fr;
 }
 
-TaskButton:hover {
-    background: grey;
-}
-
-TaskButton:hover:focus {
-    text-style: bold;
+TaskButton {
+    min-width: 90%;
+    background: $panel-lighten-1;
+    border-top: tall $panel-lighten-1;
+    border-bottom: tall $panel-lighten-1;
 }
 
 TaskButton:focus {
-    text-style: underline reverse;
+    border: round $accent;
+    text-style: bold;
+    background-tint: white 10%;
+}
+
+TaskButton:hover {
+    background: $secondary-background !important;
+}
+
+TaskButton:hover:focus {
+    background-tint: white 10%;
+}
+
+TaskButton.immediate_run {
+    background: cornflowerblue;
+}
+
+TaskButton.immediate_run:focus {
+    background-tint: white 10%;
 }
 
 Tooltip {

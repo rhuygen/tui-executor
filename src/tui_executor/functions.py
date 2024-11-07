@@ -14,6 +14,10 @@ import importlib
 import inspect
 from typing import Callable
 from typing import Dict
+from typing import List
+
+from textual import app
+from textual import log
 
 from .tasks import TaskKind
 
@@ -66,3 +70,11 @@ def find_ui_functions(module_path: str, predicate: Callable = None) -> Dict[str,
         for name, member in inspect.getmembers(mod)
         if inspect.isfunction(member) and hasattr(member, "__ui_kind__") and predicate(member)
     }
+
+
+def run_function(func: Callable, args: List, kwargs: Dict, runnable_type: int = None):
+    runnable_type = runnable_type or func.__ui_runnable__
+
+    response = func(*args, **kwargs)
+
+    log.info(f"run_function({args}, {kwargs}) -> {response = }")

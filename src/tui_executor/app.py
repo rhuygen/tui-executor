@@ -11,6 +11,7 @@ class TuiExecutorApp(App):
 
     CSS_PATH = "app.tcss"
     SCREENS = {"master": MasterScreen, "help": HelpScreen}
+    TOOLTIP_DELAY = 1.2  # seconds before tooltip is shown
     BINDINGS = [
         Binding("q", "quit", "Quit"),
         Binding(key="f1", action="help", description="Help", show=True, priority=True),

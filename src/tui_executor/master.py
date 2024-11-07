@@ -2,18 +2,25 @@ import importlib
 import textwrap
 from typing import List
 
+from textual import on
 from textual.app import ComposeResult
 from textual.containers import Grid
 from textual.containers import Horizontal
 from textual.containers import Vertical
+from textual.events import Event
 from textual.screen import Screen
+from textual.widgets import Button
 from textual.widgets import Footer
 from textual.widgets import Header
 from textual.widgets import RichLog
 from textual.widgets import TabbedContent
 
+from .funcpars import get_parameters
+from .functions import run_function
 from .modules import get_ui_subpackages
 from .panels import PackagePanel
+from .tasks import TaskButton
+from .utils import extract_var_name_args_and_kwargs
 
 
 class MasterScreen(Screen):
@@ -51,6 +58,26 @@ class MasterScreen(Screen):
             """
         ))
         self.query_one("#arguments-panel", Grid).border_title = "Arguments"
+
+    @on(TaskButton.Pressed)
+    def run_task(self, event: Event):
+        button: TaskButton = event.button
+
+        self.log.info(f"TaskButton: {event = }, {type(event) = }, {button = }")
+
+        if button.immediate_run():
+            self.log.info("Task is run immediately when pressed.")
+
+            ui_pars = get_parameters(button.function)
+            args, kwargs = extract_var_name_args_and_kwargs(ui_pars)
+            run_function(button.function, args, kwargs, button.function.__ui_runnable__)
+
+        self.log.info("Preparing the ArgumentsPanel..")
+
+        # Prepare and show the ArgumentsPanel. The function will be executed when the Run button is pressed in the
+        # ArgumentsPanel.
+
+        ...
 
     def _create_tabs(self):
         """

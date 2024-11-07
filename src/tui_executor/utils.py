@@ -272,12 +272,12 @@ def stringify_var_name_checks(args, kwargs):
     )
 
 
-def extract_var_name_args_and_kwargs(ui_args: dict):
+def extract_var_name_args_and_kwargs(ui_pars: dict):
     """
     Returns the args and kwargs that are of user type VariableName.
 
     Args:
-        ui_args: a dictionary with the arguments and their types.
+        ui_pars: a dictionary with the function parameters and their types.
 
     Returns:
         Positional arguments are returned in a list, keyword arguments are returned in a dictionary.
@@ -288,13 +288,13 @@ def extract_var_name_args_and_kwargs(ui_args: dict):
 
     args = [
         v.annotation.get_value()
-        for k, v in ui_args.items()
+        for k, v in ui_pars.items()
         if isinstance(v.annotation, VariableName) and v.kind == ParameterKind.POSITIONAL_ONLY
     ]
 
     kwargs = {
         k: v.annotation.get_value()
-        for k, v in ui_args.items()
+        for k, v in ui_pars.items()
         if isinstance(v.annotation, VariableName) and v.kind in (ParameterKind.POSITIONAL_OR_KEYWORD, ParameterKind.KEYWORD_ONLY)
     }
 

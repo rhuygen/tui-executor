@@ -1,5 +1,15 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.2.0 — 08/11/2024 — The Arguments Release
+
+Let's go to version 0.2.x now that we move to the implementation of the arguments panel. This is the next step to bring us closer to a fully working TUI Executor.
+
+- [0.2.0] it takes longer before the tooltip appears when hovering a button
+- [0.2.0] buttons are styled better with hover and focus
+- [0.2.0] 🚧started with run_task for immediate_run functions
+- [0.2.0] added tasks to demo for immediate_run demonstration
+- [0.2.0] small maintenance changes in several functions
+
 ## Version 0.1.12 — 07/11/2024 — The Information is Knowledge Release
 
 This release implements tooltips for the collapsible module sections and for the task buttons. If a docstring exists at module level or at function level, it will be shown in a tooltip when the user hovers over the widget.
