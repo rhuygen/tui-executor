@@ -1,10 +1,14 @@
 import logging
 import queue
 from typing import List
+from typing import TYPE_CHECKING
+from typing import Tuple
 
 from jupyter_client import KernelClient
 
-from tui_executor.kernel import MyKernel
+if TYPE_CHECKING:
+    from tui_executor.kernel import MyKernel
+
 from tui_executor.utils import decode_traceback
 
 LOGGER = logging.getLogger("tui-executor.client")
@@ -14,7 +18,7 @@ DEBUG = True
 
 
 class MyClient:
-    def __init__(self, kernel: MyKernel, startup_timeout: float = 60.0, timeout: float = 1.0):
+    def __init__(self, kernel: "MyKernel", startup_timeout: float = 60.0, timeout: float = 1.0):
         self._timeout = timeout
         """The timeout used when communicating with the kernel."""
 
@@ -23,7 +27,7 @@ class MyClient:
 
         self._error = None
 
-        self._client: KernelClient = kernel.get_client()
+        self._client: KernelClient = kernel.get_kernel_manager().client()
 
     def connect(self):
         DEBUG and LOGGER.debug(f"{id(self)}: Opening channels for client [{self}]...")
@@ -103,15 +107,28 @@ class MyClient:
     def execute(self, snippet: str, allow_stdin: bool = True) -> str:
         return self._client.execute(f"{snippet}\n", allow_stdin=allow_stdin)
 
-    def run_snippet(self, snippet: str, allow_stdin: bool = True):
+    def run_snippet(self, snippet: str, allow_stdin: bool = True) -> Tuple[List[str], List[str], List[str]]:
+        """
+        Execute the code snippet in the kernel. The snippet can be a multiline command.
 
+        Returns:
+            A tuple with three lists:
+
+            - the command that was given, i.e. the code snippet
+            - the output of the code that was executed
+            - the error message or traceback if there was an error
+
+            The lists may be empty.
+        """
         msg_id = self._client.execute(f"{snippet}\n", allow_stdin=allow_stdin)
 
         DEBUG and LOGGER.debug(f"{id(self)}: {msg_id = }")
 
         # fetch the output
 
-        output: List[str] = []
+        cmd: List[str] = []
+        std_out: List[str] = []
+        std_err: List[str] = []
 
         while True:
             try:
@@ -131,13 +148,17 @@ class MyClient:
                 elif io_msg_type == 'stream':
                     if 'text' in io_msg_content:
                         text = io_msg_content['text'].rstrip()
-                        output.append(text)
+                        std_out.extend(text.split('\n'))
                 elif io_msg_type == 'display_data':
                     ...  # ignore this message type
                 elif io_msg_type == 'execute_input':
-                    ...  # ignore this message type
+                    if 'code' in io_msg_content:
+                        text = io_msg_content['code'].rstrip()
+                        cmd.extend(text.split('\n'))
                 elif io_msg_type == 'error':
-                    ...  # ignore this message type
+                    if 'traceback' in io_msg_content:
+                        text = io_msg_content['traceback']
+                        std_err.extend(decode_traceback(text).split('\n'))
                 elif io_msg_type == 'execute_result':
                     ...  # ignore this message type
                 else:
@@ -145,7 +166,9 @@ class MyClient:
             except queue.Empty:
                 ...
 
-        DEBUG and LOGGER.debug(f"{id(self)}: {output = }")
+        DEBUG and LOGGER.debug(f"{id(self)}: {cmd     = }")
+        DEBUG and LOGGER.debug(f"{id(self)}: {std_out = }")
+        DEBUG and LOGGER.debug(f"{id(self)}: {std_err = }")
 
         # fetch the reply message
 
@@ -163,7 +186,7 @@ class MyClient:
         else:
             self._error = None
 
-        return "\n".join(output)
+        return cmd, std_out, std_err
 
     def __del__(self):
         if self._client:
