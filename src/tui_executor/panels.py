@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import importlib
 from typing import Dict
 
+from rich.console import RenderableType
 from textual.app import ComposeResult
 from textual.containers import VerticalScroll
 from textual.widget import Widget
 from textual.widgets import Collapsible
 from textual.widgets import Label
+from textual.widgets import RichLog
 from textual.widgets import Static
 from textual.widgets import TabPane
 
@@ -14,6 +18,7 @@ from tui_executor.funcpars import get_parameters
 from tui_executor.functions import get_ui_button_functions
 from tui_executor.modules import get_ui_modules
 from tui_executor.tasks import TaskButton
+from tui_executor.utils import format_datetime
 
 
 class ArgumentsPanel(Widget):
@@ -139,3 +144,24 @@ class PackagePanel(TabPane):
                 panels[display_name] = panel
 
         return panels
+
+
+class ConsoleOutput(RichLog):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.level_width = 10
+        """The column width of the logging level, used to properly align log messages."""
+        self.info = f"[green]{'INFO':{self.level_width}}[/]"
+        self.warning = f"[dark_orange]{'WARNING':{self.level_width}}[/]"
+        self.error = f"[red1]{'ERROR':{self.level_width}}[/]"
+
+    def write_log_info(self, msg: RenderableType | str):
+        self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.info} {msg}")
+
+    def write_log_warning(self, msg: RenderableType | str):
+        self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.warning} {msg}")
+
+    def write_log_error(self, msg: RenderableType | str):
+        self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.error} {msg}")
