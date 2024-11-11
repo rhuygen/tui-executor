@@ -51,3 +51,28 @@ Tooltip {
     color: auto 90%;
     max-width: 80;
 }
+
+YesNoDialog {
+    align: center middle;
+}
+
+YesNoDialog > Vertical {
+    border: thick $primary 50%;
+    width: 50%;
+    height: 15;
+    background: $boost;
+    Label {
+        text-style: bold;
+        margin: 2 4;
+    }
+    Markdown {
+       margin: 2 4;
+    }
+    Horizontal {
+        width: 100%;
+        align: center top;
+        #btn-dialog-yes {
+            margin-right: 2;
+        }
+    }
+}
