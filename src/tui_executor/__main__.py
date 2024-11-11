@@ -3,6 +3,8 @@ import logging
 import sys
 from pathlib import Path
 
+from rich.traceback import install as install_traceback
+
 from tui_executor.app import TuiExecutorApp
 from tui_executor.utils import print_system_info
 from tui_executor.version import __version__ as version
@@ -55,6 +57,8 @@ def main():
         print("The argument to --cmd-log must be an existing directory.")
         parser.print_help()
         return
+
+    install_traceback()
 
     app = TuiExecutorApp(module_path_list=args.module_path)
 
