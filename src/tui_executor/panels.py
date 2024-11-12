@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import logging
 from typing import Dict
 
 from rich.console import RenderableType
@@ -156,6 +157,19 @@ class ConsoleOutput(RichLog):
         self.info = f"[green]{'INFO':{self.level_width}}[/]"
         self.warning = f"[dark_orange]{'WARNING':{self.level_width}}[/]"
         self.error = f"[red1]{'ERROR':{self.level_width}}[/]"
+
+    def write_log(self, level: int, msg: RenderableType | str):
+        if level == logging.INFO:
+            self.write_log_info(msg)
+        elif level == logging.WARNING:
+            self.write_log_warning(msg)
+        elif level == logging.ERROR:
+            self.write_log_error(msg)
+        else:
+            self.write_log_warning(
+                f"The given level ({level=}) is not implemented, using default level INFO ({logging.INFO})."
+            )
+            self.write_log_info(msg)
 
     def write_log_info(self, msg: RenderableType | str):
         self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.info} {msg}")

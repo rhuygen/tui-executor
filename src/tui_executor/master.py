@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib
+import logging
 from typing import List
 
 from textual import on
@@ -29,9 +30,10 @@ from .utils import extract_var_name_args_and_kwargs
 
 
 class ConsoleMessage(Message):
-    def __init__(self, message: str):
+    def __init__(self, message: str, level: int = logging.INFO):
         super().__init__()
         self.message = message
+        self.level = level
 
 
 class MasterScreen(Screen):
@@ -124,11 +126,11 @@ class MasterScreen(Screen):
 
         ...
 
-    def send_to_console(self, message: str):
-        self.post_message(ConsoleMessage(message))
+    def send_to_console(self, message: str, level: int = logging.INFO):
+        self.post_message(ConsoleMessage(message, level=level))
 
     def on_console_message(self, message: ConsoleMessage):
-        self.query_one(ConsoleOutput).write_log_info(message.message)
+        self.query_one(ConsoleOutput).write_log(message.level, message.message)
 
     def _create_tabs(self):
         """

@@ -12,6 +12,7 @@ __all__ = [
 
 import importlib
 import inspect
+import logging
 import sys
 import traceback
 from typing import Callable
@@ -82,19 +83,20 @@ def run_function(func: Callable, args: List, kwargs: Dict, runnable_type: int = 
         response = func(*args, **kwargs)
     except Exception as exc:
         # TODO: This shall be sent to the Output console with proper formatting
-        notify(f"Caught {exc.__class__.__name__}: {exc}")
+        notify(f"Caught {exc.__class__.__name__}: {exc}", level=logging.INFO)
         exc_type, exc_value, exc_traceback = sys.exc_info()
         traceback_details = traceback.extract_tb(exc_traceback)
-        err_msg = ""
+        err_msg = "\n"
         for filename, lineno, fn, text in traceback_details:
             err_msg += (
+                f"{'-' * 80}\n"
                 f"In File    : {filename}\n"
                 f"At Line    : {lineno}\n"
                 f"In Function: {fn}\n"
                 f"Code       : {text}\n"
                 f"Exception  : {exc_value}\n"
             )
-        notify(err_msg)
+        notify(err_msg, level=logging.ERROR)
     else:
         parameters = ""
         if args:
@@ -104,4 +106,4 @@ def run_function(func: Callable, args: List, kwargs: Dict, runnable_type: int = 
                 parameters += ', '
             parameters += ', '.join([f"{k}={v}" for k, v in kwargs.items()])
 
-        notify(f"run_function: {func.__name__}({parameters}) -> {response = }")
+        notify(f"run_function: {func.__name__}({parameters}) -> {response = }", level=logging.INFO)
