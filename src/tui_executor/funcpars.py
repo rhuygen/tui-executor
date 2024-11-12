@@ -95,8 +95,11 @@ class Empty(Singleton):
 
 def get_parameters(func: Callable) -> Dict[str, Parameter]:
     """
-    Determines the signature of the function and returns a dictionary with as keys the name of the parameters
-    and as values the parameter definition for all parameters in this function definition.
+    Determines the signature of the function and returns a dictionary with as keys
+    the name of the parameters and as values the parameter definition for all
+    parameters in this function definition. The parameter definition is a
+    `Parameter` object, which holds the type, parameter annotation, and a default
+    value if available.
 
     Args:
         func: a function callable
