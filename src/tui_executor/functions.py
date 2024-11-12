@@ -12,11 +12,12 @@ __all__ = [
 
 import importlib
 import inspect
+import sys
+import traceback
 from typing import Callable
 from typing import Dict
 from typing import List
 
-from textual import app
 from textual import log
 
 from .tasks import TaskKind
@@ -72,9 +73,35 @@ def find_ui_functions(module_path: str, predicate: Callable = None) -> Dict[str,
     }
 
 
-def run_function(func: Callable, args: List, kwargs: Dict, runnable_type: int = None):
+def run_function(func: Callable, args: List, kwargs: Dict, runnable_type: int = None,
+                 notify: Callable = lambda x: ...):
+
     runnable_type = runnable_type or func.__ui_runnable__
 
-    response = func(*args, **kwargs)
+    try:
+        response = func(*args, **kwargs)
+    except Exception as exc:
+        # TODO: This shall be sent to the Output console with proper formatting
+        notify(f"Caught {exc.__class__.__name__}: {exc}")
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback_details = traceback.extract_tb(exc_traceback)
+        err_msg = ""
+        for filename, lineno, fn, text in traceback_details:
+            err_msg += (
+                f"In File    : {filename}\n"
+                f"At Line    : {lineno}\n"
+                f"In Function: {fn}\n"
+                f"Code       : {text}\n"
+                f"Exception  : {exc_value}\n"
+            )
+        notify(err_msg)
+    else:
+        parameters = ""
+        if args:
+            parameters = ', '.join(args)
+        if kwargs:
+            if parameters:
+                parameters += ', '
+            parameters += ', '.join([f"{k}={v}" for k, v in kwargs.items()])
 
-    log.info(f"run_function({args}, {kwargs}) -> {response = }")
+        notify(f"run_function: {func.__name__}({parameters}) -> {response = }")

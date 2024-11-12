@@ -10,6 +10,7 @@ from textual.binding import Binding
 from textual.containers import Grid
 from textual.containers import Horizontal
 from textual.containers import Vertical
+from textual.message import Message
 from textual.screen import Screen
 from textual.widgets import Footer
 from textual.widgets import Header
@@ -25,6 +26,12 @@ from .panels import ConsoleOutput
 from .panels import PackagePanel
 from .tasks import TaskButton
 from .utils import extract_var_name_args_and_kwargs
+
+
+class ConsoleMessage(Message):
+    def __init__(self, message: str):
+        super().__init__()
+        self.message = message
 
 
 class MasterScreen(Screen):
@@ -106,7 +113,7 @@ class MasterScreen(Screen):
 
             ui_pars = get_parameters(button.function)
             args, kwargs = extract_var_name_args_and_kwargs(ui_pars)
-            run_function(button.function, args, kwargs)
+            run_function(button.function, args, kwargs, notify=self.send_to_console)
 
             return
 
@@ -116,6 +123,12 @@ class MasterScreen(Screen):
         # ArgumentsPanel.
 
         ...
+
+    def send_to_console(self, message: str):
+        self.post_message(ConsoleMessage(message))
+
+    def on_console_message(self, message: ConsoleMessage):
+        self.query_one(ConsoleOutput).write_log_info(message.message)
 
     def _create_tabs(self):
         """
