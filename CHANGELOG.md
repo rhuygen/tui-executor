@@ -1,12 +1,21 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.3.0 — 11/11/2024 — The Kernels Release
+
+This release adds kernel and client support as a prototype, but it needs some more work to become stable and needs functionality to select an existing kernel and use that kernel when running tasks.
+
+- [0.3.0] 🚧 done major refactoring of the kernel and client modules.
+- [0.3.0] added a Yes / No modal dialog
+- [0.3.0] replaced RichLog with a new subclass ConsoleOutput
+- [0.3.0] Small update to run_function which now sends messages to the ConsoleOutput instead of to the Textual log.
+
 ## Version 0.2.0 — 08/11/2024 — The Arguments Release
 
 Let's go to version 0.2.x now that we move to the implementation of the arguments panel. This is the next step to bring us closer to a fully working TUI Executor.
 
 - [0.2.0] it takes longer before the tooltip appears when hovering a button
 - [0.2.0] buttons are styled better with hover and focus
-- [0.2.0] 🚧started with run_task for immediate_run functions
+- [0.2.0] 🚧 started with run_task for immediate_run functions
 - [0.2.0] added tasks to demo for immediate_run demonstration
 - [0.2.0] small maintenance changes in several functions
 
