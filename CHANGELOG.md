@@ -1,5 +1,11 @@
 # CHANGELOG for the TUI Executor Project
 
+## Version 0.3.1 — 12/11/2024
+
+- [0.3.2] improve message logging to the console output, adding the level
+- [0.3.2] improve some docstrings
+- [0.3.1] fixed the location of the demo tasks
+
 ## Version 0.3.0 — 11/11/2024 — The Kernels Release
 
 This release adds kernel and client support as a prototype, but it needs some more work to become stable and needs functionality to select an existing kernel and use that kernel when running tasks.
