@@ -14,7 +14,7 @@ from tui_executor.app import TuiExecutorApp
 
 HERE = Path(__file__).parent.resolve()
 
-sys.path.append(str(HERE / "../../demo"))
+sys.path.append(str(HERE / "demo"))
 
 module_path_list = [
     "tasks.docs",
