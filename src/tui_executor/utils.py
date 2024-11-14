@@ -28,6 +28,8 @@ from rich.syntax import Syntax
 from rich.text import Text
 from rich.tree import Tree
 
+from tui_executor import DEFAULT_CONSOLE_OUTPUT_WIDTH
+
 
 def replace_environment_variable(input_string: str) -> str:
     """Returns the `input_string` with all occurrences of ENV['var'] expanded.
@@ -212,7 +214,7 @@ def sys_path(path: Path | str):
         sys.path.pop(0)
 
 
-class Data(object):
+class Data:
     pass
 
 
@@ -337,7 +339,10 @@ def create_code_snippet_renderable(func: Callable, args: List, kwargs: Dict):
 
     snippet = f"{func.__ui_capture_response__} = {func.__name__}({stringify_args(args)}{', ' if args else ''}{stringify_kwargs(kwargs)})"
 
-    return Panel(Syntax(snippet, "python", theme='default', word_wrap=True), box=box.HORIZONTALS)
+    return Panel(
+        Syntax(snippet, "python", theme='ansi_dark', word_wrap=True),
+        box=box.HORIZONTALS, width=DEFAULT_CONSOLE_OUTPUT_WIDTH
+    )
 
 
 def select_directory(directory: str = None) -> str | None:
