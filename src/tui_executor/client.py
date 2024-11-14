@@ -1,10 +1,12 @@
 import logging
 import queue
+from typing import Callable
 from typing import List
 from typing import TYPE_CHECKING
 from typing import Tuple
 
-from jupyter_client import KernelClient
+from jupyter_client import BlockingKernelClient
+from rich.text import Text
 
 if TYPE_CHECKING:
     from tui_executor.kernel import MyKernel
@@ -27,7 +29,7 @@ class MyClient:
 
         self._error = None
 
-        self._client: KernelClient = kernel.get_kernel_manager().client()
+        self._client: BlockingKernelClient = kernel.get_kernel_manager().client()
 
     def connect(self):
         DEBUG and LOGGER.debug(f"{id(self)}: Opening channels for client [{self}]...")
@@ -107,7 +109,12 @@ class MyClient:
     def execute(self, snippet: str, allow_stdin: bool = True) -> str:
         return self._client.execute(f"{snippet}\n", allow_stdin=allow_stdin)
 
-    def run_snippet(self, snippet: str, allow_stdin: bool = True) -> Tuple[List[str], List[str], List[str]]:
+    def run_snippet(
+            self,
+            snippet: str,
+            allow_stdin: bool = True,
+            notify: Callable = lambda x, y: ...
+    ) -> Tuple[List[str], List[str], List[str]]:
         """
         Execute the code snippet in the kernel. The snippet can be a multiline command.
 
@@ -148,9 +155,14 @@ class MyClient:
                 elif io_msg_type == 'stream':
                     if 'text' in io_msg_content:
                         text = io_msg_content['text'].rstrip()
-                        std_out.extend(text.split('\n'))
+                        # std_out.extend(text.split('\n'))
+                        notify(Text.from_ansi(text), level=logging.NOTSET)
                 elif io_msg_type == 'display_data':
-                    ...  # ignore this message type
+                    if 'data' in io_msg_content:
+                        if 'text/plain' in io_msg_content['data']:
+                            text = io_msg_content['data']['text/plain'].rstrip()
+                            # std_out.extend(text.split('\n'))
+                            notify(Text.from_ansi(text), level=logging.NOTSET)
                 elif io_msg_type == 'execute_input':
                     if 'code' in io_msg_content:
                         text = io_msg_content['code'].rstrip()
