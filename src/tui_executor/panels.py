@@ -152,24 +152,34 @@ class ConsoleOutput(RichLog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.level_width = 10
+        self.level_width = 8
         """The column width of the logging level, used to properly align log messages."""
+
+        self.debug = f"[grey70]{'DEBUG':{self.level_width}}[/]"
         self.info = f"[green]{'INFO':{self.level_width}}[/]"
         self.warning = f"[dark_orange]{'WARNING':{self.level_width}}[/]"
         self.error = f"[red1]{'ERROR':{self.level_width}}[/]"
 
     def write_log(self, level: int, msg: RenderableType | str):
-        if level == logging.INFO:
+
+        if level == logging.DEBUG:
+            self.write_log_debug(msg)
+        elif level == logging.INFO:
             self.write_log_info(msg)
         elif level == logging.WARNING:
             self.write_log_warning(msg)
         elif level == logging.ERROR:
             self.write_log_error(msg)
+        elif level == logging.NOTSET:
+            self.write(msg)
         else:
             self.write_log_warning(
                 f"The given level ({level=}) is not implemented, using default level INFO ({logging.INFO})."
             )
             self.write_log_info(msg)
+
+    def write_log_debug(self, msg: RenderableType | str):
+        self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.debug} {msg}")
 
     def write_log_info(self, msg: RenderableType | str):
         self.write(f"{format_datetime(fmt='%Y-%m-%d %H:%M:%S')}: {self.info} {msg}")
