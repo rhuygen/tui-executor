@@ -8,6 +8,7 @@ __all__ = [
     "get_connection_file",
     "get_connection_info",
     "get_key",
+    "start_kernel",
 ]
 
 import datetime
