@@ -1,7 +1,13 @@
 from __future__ import annotations
 
+import asyncio
 import importlib
 import logging
+import sys
+import traceback
+from queue import Queue
+from typing import Callable
+from typing import Dict
 from typing import List
 
 from textual import on
@@ -16,17 +22,22 @@ from textual.screen import Screen
 from textual.widgets import Footer
 from textual.widgets import Header
 from textual.widgets import TabbedContent
+from textual.worker import Worker
+from textual.worker import WorkerState
 
 from .dialogs import YesNoDialog
 from .funcpars import get_parameters
-from .functions import run_function
 from .kernel import MyKernel
 from .kernel import start_kernel
 from .modules import get_ui_subpackages
 from .panels import ConsoleOutput
 from .panels import PackagePanel
+from .runnables import FunctionRunnableKernel
 from .tasks import TaskButton
 from .utils import extract_var_name_args_and_kwargs
+
+DEBUG = False
+"""Enable/disable all debugging log messages in this module."""
 
 
 class ConsoleMessage(Message):
@@ -49,6 +60,7 @@ class MasterScreen(Screen):
         self.tabs = {}
 
         self.kernel: MyKernel | None = None
+        self.input_queue: Queue = Queue()
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
@@ -57,7 +69,7 @@ class MasterScreen(Screen):
         yield Footer()
 
         with Horizontal():
-            with TabbedContent():
+            with TabbedContent(id="all-tasks"):
 
                 self.tabs = self._create_tabs()
                 for tab_name in sorted(self.tabs):
@@ -65,7 +77,7 @@ class MasterScreen(Screen):
 
             with Vertical():
                 yield Grid(name="Arguments", id="arguments-panel")
-                yield ConsoleOutput(max_lines=200, markup=True, id="console-log")
+                yield ConsoleOutput(max_lines=200, markup=True, highlight=False, id="console-log")
 
     def on_mount(self) -> None:
         self.query_one("#console-log", ConsoleOutput).write_log_info("The TUI Executor App is ready to launch.")
@@ -73,11 +85,17 @@ class MasterScreen(Screen):
         self.query_one("#console-log", ConsoleOutput).write_log_info("Mounting ...")
 
         self.query_one("#arguments-panel", Grid).border_title = "Arguments"
+        self.query_one("#console-log", ConsoleOutput).border_title = "Console Output"
+
+        self.set_timer(0.2, self._start_kernel)
+
+    async def _start_kernel(self):
+        self.action_start_kernel()
 
     @work()
     async def action_start_kernel(self, force: bool = False) -> None:
 
-        name = "python3"  # get the kernel name from a widget or from a the command panel
+        name = "python3"  # get the kernel name from a widget or from the command panel
 
         # Starting the kernel will need a proper PYTHONPATH for importing the packages
 
@@ -103,19 +121,38 @@ class MasterScreen(Screen):
                 self.kernel = start_kernel(name)
 
     @on(TaskButton.Pressed)
-    def run_task(self, event: TaskButton.Pressed):
+    async def run_task(self, event: TaskButton.Pressed):
         button: TaskButton = event.button
 
-        self.log.info(f"TaskButton: {event = }, {type(event) = }, {button = }")
+        self.log.debug(f"TaskButton: {event = }, {type(event) = }, {button = }")
 
-        if button.immediate_run():
-            self.query_one(ConsoleOutput).write_log_info(
+        if DEBUG:
+            msg = (
+                f"Some debugging information on the button:\n"
+                f"Button name: {button.name}\n"
+                f"Button module_name: {button.module_name}\n"
+                f"Button module_display_name: {button.module_display_name}\n"
+                f"Button label: {button.label}\n"
+                f"Button function: {button.function}\n"
+                f"Button function_name: {button.function_name}\n"
+                f"Button function_display_name: {button.function_display_name}\n"
+                f"Immediate run: {button.immediate_run}\n"
+            )
+            self.query_one(ConsoleOutput).write_log_debug(msg)
+
+        if button.immediate_run:
+            DEBUG and self.query_one(ConsoleOutput).write_log_info(
                 f"Task {button.function.__name__} is run immediately when pressed."
             )
 
             ui_pars = get_parameters(button.function)
             args, kwargs = extract_var_name_args_and_kwargs(ui_pars)
-            run_function(button.function, args, kwargs, notify=self.send_to_console)
+            self.run_function(
+                button.function, args, kwargs,
+                input_queue=self.input_queue, kernel=self.kernel, notify=self.send_to_console
+            )
+
+            # self.query_one("#all-tasks", TabbedContent).disabled = False
 
             return
 
@@ -131,6 +168,15 @@ class MasterScreen(Screen):
 
     def on_console_message(self, message: ConsoleMessage):
         self.query_one(ConsoleOutput).write_log(message.level, message.message)
+
+    def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
+        """Called when the worker state changes."""
+
+        if event.worker.name == "run_function":
+            if event.state == WorkerState.RUNNING:
+                self.query_one("#all-tasks", TabbedContent).disabled = True
+            elif event.state in (WorkerState.SUCCESS, WorkerState.ERROR, WorkerState.CANCELLED):
+                self.query_one("#all-tasks", TabbedContent).disabled = False
 
     def _create_tabs(self):
         """
@@ -163,6 +209,74 @@ class MasterScreen(Screen):
                     tabs[tab_name] = tab
 
         return tabs
+
+    @work()
+    async def run_function(
+            self,
+            func: Callable, args: List, kwargs: Dict,
+            input_queue: Queue = None,
+            runnable_type: int = None,
+            kernel: MyKernel = None,
+            notify: Callable = lambda x, y: ...
+    ):
+
+        runnable_type = runnable_type or func.__ui_runnable__
+
+        try:
+            # response = func(*args, **kwargs)
+            # thread = FunctionRunnableCurrentInterpreter(func, args, kwargs, input_queue, notify)
+            thread = FunctionRunnableKernel(kernel, func, args, kwargs, input_queue, notify)
+            thread.start()
+
+            # What if the function takes a long time to finish or ends up in an infinite loop?
+            # The loop below ensures the TUI stays responsive.
+
+            while thread.is_running():
+                await asyncio.sleep(0.1)
+
+            thread.join()
+            response = thread.response()
+
+            # with MyClient(kernel) as client:
+            #     snippet = create_code_snippet(func, args, kwargs)
+            #
+            #     notify("The code snippet:", level=logging.NOTSET)
+            #     notify(create_code_snippet_renderable(func, args, kwargs), level=logging.NOTSET)
+            #     notify("", level=logging.NOTSET)
+            #
+            #     cmd, out, err = client.run_snippet(snippet, notify=notify)
+            #
+            #     # if out:
+            #     #     notify(Text.from_ansi('\n'.join(out)), level=logging.NOTSET)
+            #     if err:
+            #         notify(Text.from_ansi('\n'.join(err)), level=logging.NOTSET)
+
+        except Exception as exc:
+            # TODO: This shall be sent to the Output console with proper formatting
+            notify(f"Caught {exc.__class__.__name__}: {exc}", level=logging.INFO)
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback_details = traceback.extract_tb(exc_traceback)
+            err_msg = "\n"
+            for filename, lineno, fn, text in traceback_details:
+                err_msg += (
+                    f"{'-' * 80}\n"
+                    f"In File    : {filename}\n"
+                    f"At Line    : {lineno}\n"
+                    f"In Function: {fn}\n"
+                    f"Code       : {text}\n"
+                    f"Exception  : {exc_value}\n"
+                )
+            notify(err_msg, level=logging.ERROR)
+        else:
+            parameters = ""
+            if args:
+                parameters = ', '.join(args)
+            if kwargs:
+                if parameters:
+                    parameters += ', '
+                parameters += ', '.join([f"{k}={v}" for k, v in kwargs.items()])
+
+            # notify(f"run_function: {func.__name__}({parameters}) -> {out = }", level=logging.INFO)
 
 
 def get_tab_name(module_path: str, name: str = None):
