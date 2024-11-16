@@ -47,13 +47,13 @@ class SelectDialog(ModalScreen[int]):
 
     BINDINGS = [Binding("escape", "dismiss(-1)", "", show=False)]
 
-    def __init__(self, options: list[str], title: str = None, message: str = None):
+    def __init__(self, options: list[str], title: str = None, message: str = None, footer: str = None):
         super().__init__()
 
         self._title = title or "Select one of the options"
         self._message = message or ""
         self._options = [(str(y), x) for x, y in enumerate(options)]
-
+        self._footer = footer or "Press [i]escape[/] to dismiss this dialog."
         self._selected_index = -1
 
     def compose(self) -> ComposeResult:
@@ -65,6 +65,8 @@ class SelectDialog(ModalScreen[int]):
             with Horizontal():
                 yield Button("OK", variant="primary", id="btn-dialog-ok")
                 yield Button("Cancel", id="btn-dialog-cancel")
+            if self._footer:
+                yield Label(self._footer, id="lbl-dialog-footer")
 
     @on(Select.Changed)
     def select_changed(self, event: Select.Changed) -> None:

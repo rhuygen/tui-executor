@@ -91,6 +91,7 @@ class MasterScreen(Screen):
 
     def on_mount(self) -> None:
         self.query_one("#arguments-panel", ArgumentsPanel).border_title = "Arguments"
+        self.query_one("#arguments-panel", ArgumentsPanel).display = False
         self.query_one("#console-log", ConsoleOutput).border_title = "Console Output"
 
         self.set_timer(0.2, self._start_kernel)
@@ -127,7 +128,7 @@ class MasterScreen(Screen):
                 )
             )
         )
-        self.query_one("#console-log", ConsoleOutput).write_log_info(f"Selected index = {index}")
+        # self.query_one("#console-log", ConsoleOutput).write_log_info(f"Selected index = {index}")
 
         if 0 <= index < len(kernels):
             kernel = kernels[index]

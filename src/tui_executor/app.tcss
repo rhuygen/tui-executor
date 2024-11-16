@@ -35,6 +35,10 @@ ArgumentsPanel {
     #btn-min-max-args-panel {
         border: round $accent;
     }
+
+    #lbl-no-arguments {
+        margin: 2;
+    }
 }
 
 ArgumentsInput {

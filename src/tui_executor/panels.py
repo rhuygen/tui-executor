@@ -13,6 +13,7 @@ from textual.reactive import reactive
 from textual.widget import Widget
 from textual.widgets import Button
 from textual.widgets import Collapsible
+from textual.widgets import Label
 from textual.widgets import Placeholder
 from textual.widgets import RichLog
 from textual.widgets import Static
@@ -61,8 +62,15 @@ class ArgumentsPanel(Widget):
 
         if self.button:
             with ScrollableContainer():
+                if not self.input_fields:
+                    yield Label(
+                        f"This function \\[{self.button.function_name}()] doesn't have any arguments.",
+                        id="lbl-no-arguments"
+                    )
+
                 for input_field in self.input_fields:
                     yield input_field
+
             with Horizontal(id="buttons-arguments-panel"):
                 with Container():
                     yield Button("Maximize", id="btn-min-max-args-panel")

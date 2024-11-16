@@ -34,7 +34,7 @@ def function_with_an_extra_log_name():
 def another_function_with_an_extra_long_name():
     """
     The length of the function name will not fit the space that is allowed in
-    the task buttons panel. but we used a display_name to fix that.
+    the task buttons panel, but we used a display_name to fix that.
     """
     print(
         f"The filename is 40 characters long. "
