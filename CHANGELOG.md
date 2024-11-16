@@ -1,11 +1,14 @@
 # CHANGELOG for the TUI Executor Project
 
-## Version 0.4.0 — 16/11/2024 — The Running in the Kernel Release
+## Version 0.4.1 — 16/11/2024 — The Running in the Kernel Release
 
 This release focussed on running the tasks in the IPython kernel, which is started automatically during initialisation of the app. The release also allows you to choose another already running kernel. Code snippets will then be executed in that kernel. 
 
 Its a big release with lots of fixes and additions.
 
+- [0.4.1] Add a footer to the SelectDialog.
+- [0.4.1] ArgumentsPanel is not shown by default.
+- [0.4.1] Report when a function has no arguments but still is not immediate_run.
 - [0.4.0] Some unit tests have been updated or fixed.
 - [0.4.0] User types are now working as expected.
 - [0.4.0] The output of snippet code is slightly improved.
