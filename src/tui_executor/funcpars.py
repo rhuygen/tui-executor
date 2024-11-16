@@ -82,11 +82,21 @@ class Parameter:
          annotation: an annotation for the Parameter or None
          default: a default value or None
     """
-    def __init__(self, name: str, kind: int, annotation: Any, default: Any):
+    def __init__(self, name: str, kind: ParameterKind, annotation: Any, default: Any):
         self.name = name
         self.kind: ParameterKind = ParameterKind(kind)
         self.annotation = annotation
         self.default = default
+
+    def __repr__(self):
+        return (
+            f"Parameter("
+            f"name={self.name}, "
+            f"kind={self.kind}, "
+            f"annotation={self.annotation}, "
+            f"default={self.default}"
+            f")"
+        )
 
 
 class Empty(Singleton):

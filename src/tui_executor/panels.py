@@ -2,19 +2,25 @@ from __future__ import annotations
 
 import importlib
 import logging
-from typing import Dict
 
 from rich.console import RenderableType
 from textual.app import ComposeResult
+from textual.containers import Container
+from textual.containers import Horizontal
+from textual.containers import ScrollableContainer
 from textual.containers import VerticalScroll
+from textual.reactive import reactive
 from textual.widget import Widget
+from textual.widgets import Button
 from textual.widgets import Collapsible
-from textual.widgets import Label
+from textual.widgets import Placeholder
 from textual.widgets import RichLog
 from textual.widgets import Static
 from textual.widgets import TabPane
 
+from tui_executor.arguments import ArgumentsInput
 from tui_executor.funcpars import Parameter
+from tui_executor.funcpars import ParameterKind
 from tui_executor.funcpars import get_parameters
 from tui_executor.functions import get_ui_button_functions
 from tui_executor.modules import get_ui_modules
@@ -40,17 +46,58 @@ class ArgumentsPanel(Widget):
     are the arguments to a function.
     """
 
-    def __init__(self, button: TaskButton):
-        super().__init__()
+    ALLOW_MAXIMIZE = True
 
-        self._button = button
-        self._pars: Dict[str, Parameter] = get_parameters(button.function)
+    button: reactive[TaskButton | None] = reactive(None, init=True, recompose=True)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.button: TaskButton | None = None
+        self.parameters: dict[str, Parameter] = {}
+        self.input_fields: list[ArgumentsInput] = []
 
     def compose(self) -> ComposeResult:
 
-        with VerticalScroll():
-            for name, parameter in self._pars.items():
-                yield Label(name)
+        if self.button:
+            with ScrollableContainer():
+                for input_field in self.input_fields:
+                    yield input_field
+            with Horizontal(id="buttons-arguments-panel"):
+                with Container():
+                    yield Button("Maximize", id="btn-min-max-args-panel")
+                    yield Button("Close", id="btn-close-args-panel")
+                    yield Button("Run", id="btn-run-args-panel")
+        else:
+            yield Placeholder()
+
+    def watch_button(self, button: TaskButton):
+        if button:
+            self.parameters = get_parameters(button.function)
+            self.input_fields = [
+                ArgumentsInput(parameter)
+                for name, parameter in self.parameters.items()
+            ]
+
+    @property
+    def function(self):
+        return self.button.function if self.button else None
+
+    @property
+    def args(self):
+        return [
+            input_field.get_value()
+            for input_field in self.input_fields
+            if input_field.parameter.kind == ParameterKind.POSITIONAL_ONLY
+        ]
+
+    @property
+    def kwargs(self):
+        return {
+            input_field.parameter.name: input_field.get_value()
+            for input_field in self.input_fields
+            if input_field.parameter.kind in [ParameterKind.POSITIONAL_OR_KEYWORD, ParameterKind.KEYWORD_ONLY]
+        }
 
 
 class ModulePanel(Static):

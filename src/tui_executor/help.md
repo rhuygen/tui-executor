@@ -5,7 +5,7 @@ Run Python functions from an automatically generated terminal app.
 | Key                | Command                        |
 |--------------------|--------------------------------|
 | `F1`               | This help                      |
-| `ctrl-c, q`        | Quit the application           |
+| `ctrl-c, ctrl-q`   | Quit the application           |
 | `d`                | Toggle dark/light theme        |
 | `tab`, `shift-tab` | Focus the next/previous widget |
 | `ctrl-p`           | Summon the command palette     |

@@ -25,7 +25,7 @@ python_path = os.environ.get("PYTHONPATH", "")
 os.environ["PYTHONPATH"] = str(HERE / "demo") + (f":{python_path}" if python_path else "")
 
 module_path_list = [
-    "tasks.docs",
+    "tasks.demo",
 ]
 
 app = TuiExecutorApp(module_path_list)

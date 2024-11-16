@@ -249,10 +249,12 @@ def custom_repr(arg: Any):
 
 
 def stringify_args(args):
+    textual.log.debug(f"stringify_args({args})")
     return ", ".join([custom_repr(arg) for arg in args])
 
 
 def stringify_kwargs(kwargs):
+    textual.log.debug(f"stringify_args({kwargs})")
     return ", ".join([f"{k}={custom_repr(v)}" for k, v in kwargs.items()])
 
 
@@ -337,10 +339,14 @@ def create_code_snippet(func: Callable, args: List, kwargs: Dict, call_func: boo
 
 def create_code_snippet_renderable(func: Callable, args: List, kwargs: Dict):
 
-    snippet = f"{func.__ui_capture_response__} = {func.__name__}({stringify_args(args)}{', ' if args else ''}{stringify_kwargs(kwargs)})"
+    snippet = (
+        f"{func.__ui_capture_response__} = "
+        f"{func.__name__}({stringify_args(args)}{', ' if args else ''}{stringify_kwargs(kwargs)})"
+    )
 
     return Panel(
         Syntax(snippet, "python", theme='ansi_dark', word_wrap=True),
+        title="code snippet", title_align="center",
         box=box.HORIZONTALS, width=DEFAULT_CONSOLE_OUTPUT_WIDTH
     )
 

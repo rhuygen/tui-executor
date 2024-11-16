@@ -16,7 +16,6 @@ from tui_executor.client import MyClient
 from tui_executor.kernel import MyKernel
 from tui_executor.utils import capture
 from tui_executor.utils import create_code_snippet
-from tui_executor.utils import create_code_snippet_renderable
 from tui_executor.utils import stringify_args
 from tui_executor.utils import stringify_kwargs
 
@@ -134,10 +133,6 @@ class FunctionRunnableKernel(FunctionRunnable):
         DEBUG and self._notify(f"----- Running script '{self.func_name}' in kernel", level=logging.DEBUG)
 
         snippet = create_code_snippet(self._func, self._args, self._kwargs)
-
-        # self._notify("The code snippet:", level=logging.NOTSET)
-        self._notify(create_code_snippet_renderable(self._func, self._args, self._kwargs), level=logging.NOTSET)
-        self._notify("", level=logging.NOTSET)
 
         client = MyClient(self.kernel, startup_timeout=self.startup_timeout)
         try:

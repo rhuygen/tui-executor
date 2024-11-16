@@ -19,6 +19,14 @@ ICON_PATH = HERE / "../../../../src/tui_executor/icons/"
 
 
 @exec_task(immediate_run=True)
+def print_sys_path():
+    import sys
+    import rich
+
+    rich.print(sys.path)
+
+
+@exec_task(immediate_run=True)
 def print_versions():
     """Print the versions of Python, Textual, and TUI Executor."""
     import rich

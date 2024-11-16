@@ -212,7 +212,10 @@ def find_running_kernels() -> Iterator[MyKernel]:
     kernel_processes = find_kernel_processes()
 
     for kernel_process in kernel_processes:
-        yield MyKernel(kernel_process.pid)
+        try:
+            yield MyKernel(kernel_process.pid)
+        except FileNotFoundError:  # This happens when the connection_file doesn't exist
+            continue
 
 # Developer Info:
 #
@@ -260,6 +263,12 @@ class MyKernel:
 
     def get_pid(self) -> int:
         return self._kernel_info.pid
+
+    def get_display_name(self):
+        # with open(self.get_connection_file(), 'r') as fd:
+        #     data: dict = json.load(fd)
+        #     return data.get("display_name", "no display name")
+        return self._kernel_manager.kernel_spec.display_name
 
     def is_alive(self) -> bool:
         return self._kernel_manager.is_alive()

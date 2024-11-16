@@ -10,12 +10,16 @@ from typing import Callable
 
 from textual.widgets import Button
 
+from tui_executor import MAX_WIDTH_FUNCTION_NAME
+
 
 def get_task_button_label(func: Callable, label: str = None, triangles: bool = False) -> str:
     """
     Determine the label for the task button associated to the given function. If the task was
     given a display name, that will have precedence over the given label. If both are None,
     the function name will be returned.
+
+    The label can have a maximum length of MAX_WIDTH_FUNCTION_NAME, which is defined in `tui-executor.__init__`.
 
     Args:
         func: the function that is associated with the button
@@ -34,7 +38,20 @@ def get_task_button_label(func: Callable, label: str = None, triangles: bool = F
     # when the immediate_run flag is True.
 
     if triangles and hasattr(func, "__ui_immediate_run__") and func.__ui_immediate_run__:
-        name = f"\u25B6 {name} \u25C0"
+        width = MAX_WIDTH_FUNCTION_NAME - 4  # another_function_with_an_extra..
+        prefix = "\u25B6 "
+        postfix = " \u25C0"
+    else:
+        width = MAX_WIDTH_FUNCTION_NAME
+        prefix = postfix = ""
+
+    if len(name) > width:
+        dots = ".."
+        width -= 2
+    else:
+        dots = ""
+
+    name = f"{prefix}{name[:width]}{dots}{postfix}"
 
     return name
 
@@ -58,7 +75,7 @@ class TaskButton(Button):
         self._function = function
 
         if function.__doc__:
-            self.tooltip = textwrap.dedent(function.__doc__)
+            self.tooltip = f"[b]{function.__name__}[/]\n" + textwrap.dedent(function.__doc__)
 
     def on_mount(self):
         if self.immediate_run:

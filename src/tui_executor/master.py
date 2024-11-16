@@ -4,6 +4,7 @@ import asyncio
 import importlib
 import logging
 import sys
+import textwrap
 import traceback
 from queue import Queue
 from typing import Callable
@@ -14,26 +15,30 @@ from textual import on
 from textual import work
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.containers import Grid
 from textual.containers import Horizontal
 from textual.containers import Vertical
 from textual.message import Message
 from textual.screen import Screen
+from textual.widgets import Button
 from textual.widgets import Footer
 from textual.widgets import Header
 from textual.widgets import TabbedContent
 from textual.worker import Worker
 from textual.worker import WorkerState
 
+from .dialogs import SelectDialog
 from .dialogs import YesNoDialog
 from .funcpars import get_parameters
 from .kernel import MyKernel
+from .kernel import find_running_kernels
 from .kernel import start_kernel
 from .modules import get_ui_subpackages
+from .panels import ArgumentsPanel
 from .panels import ConsoleOutput
 from .panels import PackagePanel
 from .runnables import FunctionRunnableKernel
 from .tasks import TaskButton
+from .utils import create_code_snippet_renderable
 from .utils import extract_var_name_args_and_kwargs
 
 DEBUG = False
@@ -50,7 +55,9 @@ class ConsoleMessage(Message):
 class MasterScreen(Screen):
 
     BINDINGS = [
-        Binding("k", "start_kernel", "Start a kernel"),
+        Binding("k", "start_kernel", "Start a kernel",
+                tooltip="Starts a new kernel. Asks confirmation if a kernel is running."),
+        Binding('K', "use_kernel", "Use an existing kernel", show=False)
     ]
 
     def __init__(self, module_path_list: List[str]):
@@ -59,8 +66,11 @@ class MasterScreen(Screen):
         self.module_path_list = module_path_list
         self.tabs = {}
 
+        self.own_kernels: set = set()
+        """Kernels that are created and owned by this app. Will be shutdown when app terminates."""
         self.kernel: MyKernel | None = None
         self.input_queue: Queue = Queue()
+        self.arguments_panel: ArgumentsPanel | None = None
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
@@ -76,21 +86,61 @@ class MasterScreen(Screen):
                     yield self.tabs[tab_name]
 
             with Vertical():
-                yield Grid(name="Arguments", id="arguments-panel")
+                yield ArgumentsPanel(name="Arguments", id="arguments-panel")
                 yield ConsoleOutput(max_lines=200, markup=True, highlight=False, id="console-log")
 
     def on_mount(self) -> None:
-        self.query_one("#console-log", ConsoleOutput).write_log_info("The TUI Executor App is ready to launch.")
-        self.query_one("#console-log", ConsoleOutput).write_log_info("Composition established.")
-        self.query_one("#console-log", ConsoleOutput).write_log_info("Mounting ...")
-
-        self.query_one("#arguments-panel", Grid).border_title = "Arguments"
+        self.query_one("#arguments-panel", ArgumentsPanel).border_title = "Arguments"
         self.query_one("#console-log", ConsoleOutput).border_title = "Console Output"
 
         self.set_timer(0.2, self._start_kernel)
 
     async def _start_kernel(self):
-        self.action_start_kernel()
+
+        kernels = list(find_running_kernels())
+        if kernels:
+            self.action_use_kernel(kernels)
+        else:
+            self.action_start_kernel()
+
+    @work()
+    async def action_use_kernel(self, kernels: list[MyKernel] = None):
+        kernels = kernels or list(find_running_kernels())
+
+        kernel_options = [
+            (
+                f"{kernel.get_display_name()} [PID={kernel.get_pid()}"
+                f"{', current kernel' if self.kernel and kernel.get_pid() == self.kernel.get_pid() else ''}]"
+            ) for kernel in kernels
+        ]
+
+        index = await self.app.push_screen_wait(
+            SelectDialog(
+                kernel_options,
+                title="Select an existing kernel",
+                message=textwrap.dedent(
+                    """\
+                    Below is a list of kernels currently running on your system. 
+                    If you want to connect to one of these existing kernels, select the kernel from the list below.
+                    Press 'OK' to confirm the selection, press 'Cancel' to discard and start a new kernel.
+                    """
+                )
+            )
+        )
+        self.query_one("#console-log", ConsoleOutput).write_log_info(f"Selected index = {index}")
+
+        if 0 <= index < len(kernels):
+            kernel = kernels[index]
+            self.query_one("#console-log", ConsoleOutput).write_log_info(f"Using kernel...{kernel_options[index]}")
+            if self.kernel:
+                if kernel.get_pid() != self.kernel.get_pid():
+                    self.kernel.shutdown()
+                    self.kernel = kernel
+            else:
+                self.kernel = kernel
+        else:
+            if not self.kernel:
+                self.action_start_kernel(force=False)
 
     @work()
     async def action_start_kernel(self, force: bool = False) -> None:
@@ -120,48 +170,80 @@ class MasterScreen(Screen):
                 self.query_one("#console-log", ConsoleOutput).write_log_info("Starting new kernel...")
                 self.kernel = start_kernel(name)
 
-    @on(TaskButton.Pressed)
-    async def run_task(self, event: TaskButton.Pressed):
-        button: TaskButton = event.button
+    @on(Button.Pressed)
+    async def run_task(self, event: Button.Pressed):
+        button: Button = event.button
 
-        self.log.debug(f"TaskButton: {event = }, {type(event) = }, {button = }")
+        self.log.debug(f"TaskButton: {event = }, {type(event) = }, {button = }, {button.id = }")
 
-        if DEBUG:
-            msg = (
-                f"Some debugging information on the button:\n"
-                f"Button name: {button.name}\n"
-                f"Button module_name: {button.module_name}\n"
-                f"Button module_display_name: {button.module_display_name}\n"
-                f"Button label: {button.label}\n"
-                f"Button function: {button.function}\n"
-                f"Button function_name: {button.function_name}\n"
-                f"Button function_display_name: {button.function_display_name}\n"
-                f"Immediate run: {button.immediate_run}\n"
-            )
-            self.query_one(ConsoleOutput).write_log_debug(msg)
+        if not self.kernel:
+            self.post_message(ConsoleMessage("No kernel is  running, task cannot be executed.", level=logging.WARNING))
+            return
 
-        if button.immediate_run:
-            DEBUG and self.query_one(ConsoleOutput).write_log_info(
-                f"Task {button.function.__name__} is run immediately when pressed."
-            )
+        # First handle the buttons from the arguments panel to run the task and manipulate the size of the panel.
 
-            ui_pars = get_parameters(button.function)
-            args, kwargs = extract_var_name_args_and_kwargs(ui_pars)
+        if button.id == "btn-run-args-panel":
+            self.minimize()
+
+            args_panel = self.query_one(ArgumentsPanel)
+
             self.run_function(
-                button.function, args, kwargs,
+                args_panel.button.function, args_panel.args, args_panel.kwargs,
                 input_queue=self.input_queue, kernel=self.kernel, notify=self.send_to_console
             )
 
-            # self.query_one("#all-tasks", TabbedContent).disabled = False
+        elif button.id == "btn-close-args-panel":
+            args_panel = self.query_one(ArgumentsPanel)
+            args_panel.button = None
+            args_panel.display = False
+            self.minimize()
 
-            return
+        elif button.id == "btn-min-max-args-panel":
+            args_panel = self.query_one(ArgumentsPanel)
+            if args_panel.is_maximized:
+                self.minimize()
+                button.label = "Maximize"
+            else:
+                self.maximize(args_panel)
+                button.label = "Minimize"
 
-        self.query_one(ConsoleOutput).write_log_info("Preparing the ArgumentsPanel..")
+        # The handle the actual execution of the task.
 
-        # Prepare and show the ArgumentsPanel. The function will be executed when the Run button is pressed in the
-        # ArgumentsPanel.
+        elif isinstance(button, TaskButton):
+            if DEBUG:
+                msg = (
+                    f"Some debugging information on the button:\n"
+                    f"Button name: {button.name}\n"
+                    f"Button module_name: {button.module_name}\n"
+                    f"Button module_display_name: {button.module_display_name}\n"
+                    f"Button label: {button.label}\n"
+                    f"Button function: {button.function}\n"
+                    f"Button function_name: {button.function_name}\n"
+                    f"Button function_display_name: {button.function_display_name}\n"
+                    f"Immediate run: {button.immediate_run}\n"
+                )
+                self.query_one(ConsoleOutput).write_log_debug(msg)
 
-        ...
+            if button.immediate_run:
+                DEBUG and self.query_one(ConsoleOutput).write_log_info(
+                    f"Task {button.function.__name__} is run immediately when pressed."
+                )
+                self.query_one(ArgumentsPanel).display = False
+
+                ui_pars = get_parameters(button.function)
+                self.log.info(f"{ui_pars = }")
+
+                args, kwargs = extract_var_name_args_and_kwargs(ui_pars)
+                self.log.info(f"{args = }, {kwargs = }")
+
+                self.run_function(
+                    button.function, args, kwargs,
+                    input_queue=self.input_queue, kernel=self.kernel, notify=self.send_to_console
+                )
+
+            else:
+                self.query_one(ArgumentsPanel).button = button
+                self.query_one(ArgumentsPanel).display = True
 
     def send_to_console(self, message: str, level: int = logging.INFO):
         self.post_message(ConsoleMessage(message, level=level))
@@ -223,8 +305,10 @@ class MasterScreen(Screen):
         runnable_type = runnable_type or func.__ui_runnable__
 
         try:
-            # response = func(*args, **kwargs)
-            # thread = FunctionRunnableCurrentInterpreter(func, args, kwargs, input_queue, notify)
+            if self.app.settings.get('show-code-snippet', False):
+                notify(create_code_snippet_renderable(func, args, kwargs), level=logging.NOTSET)
+                notify("", level=logging.NOTSET)
+
             thread = FunctionRunnableKernel(kernel, func, args, kwargs, input_queue, notify)
             thread.start()
 
@@ -237,19 +321,10 @@ class MasterScreen(Screen):
             thread.join()
             response = thread.response()
 
-            # with MyClient(kernel) as client:
-            #     snippet = create_code_snippet(func, args, kwargs)
-            #
-            #     notify("The code snippet:", level=logging.NOTSET)
-            #     notify(create_code_snippet_renderable(func, args, kwargs), level=logging.NOTSET)
-            #     notify("", level=logging.NOTSET)
-            #
-            #     cmd, out, err = client.run_snippet(snippet, notify=notify)
-            #
-            #     # if out:
-            #     #     notify(Text.from_ansi('\n'.join(out)), level=logging.NOTSET)
-            #     if err:
-            #         notify(Text.from_ansi('\n'.join(err)), level=logging.NOTSET)
+            # notify(f"{response = }")
+
+            if isinstance(response, Exception):
+                raise response
 
         except Exception as exc:
             # TODO: This shall be sent to the Output console with proper formatting
@@ -270,7 +345,7 @@ class MasterScreen(Screen):
         else:
             parameters = ""
             if args:
-                parameters = ', '.join(args)
+                parameters = ', '.join([str(x) for x in args])
             if kwargs:
                 if parameters:
                     parameters += ', '
