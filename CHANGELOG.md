@@ -1,6 +1,28 @@
 # CHANGELOG for the TUI Executor Project
 
-## Version 0.3.1 — 12/11/2024
+## Version 0.4.0 — 16/11/2024 — The Running in the Kernel Release
+
+This release focussed on running the tasks in the IPython kernel, which is started automatically during initialisation of the app. The release also allows you to choose another already running kernel. Code snippets will then be executed in that kernel. 
+
+Its a big release with lots of fixes and additions.
+
+- [0.4.0] Some unit tests have been updated or fixed.
+- [0.4.0] User types are now working as expected.
+- [0.4.0] The output of snippet code is slightly improved.
+- [0.4.0] The Arguments panel is now fully functional.
+- [0.4.0] Use CTRL+q to quit the app, instead of just 'q'.
+- [0.4.0] Function names will be displayed in the task button with maximum 32 characters (defined by the MAX_WIDTH_FUNCTION_NAME). Use `display_name` if you want to have a nicer label in the task button.
+- [0.4.0] You can choose to connect to an existing kernel
+- [0.4.0] A new dialog 'SelectDialog' is added. You can choose an option out of a list of choices.
+- [0.4.0] Tasks are now running in the kernel and output is sent to the ConsoleOutput panel
+- [0.4.0] The demo module is now called `tasks.demo`.
+- [0.3.3] Small improvements to ConsoleOutput widget
+- [0.3.3] Fixed the tui_executor.demo script to configure the PYTHONPATH correctly for the kernel
+- [0.3.3] Added DEFAULT_CONSOLE_OUTPUT_WIDTH to be used for Console and Panel width
+- [0.3.3] Improved some demo tasks and added a unit test task to test the output of a task in the console while the task is still running.
+
+
+## Version 0.3.2 — 12/11/2024 — The Small Improvements Release
 
 - [0.3.2] improve message logging to the console output, adding the level
 - [0.3.2] improve some docstrings
